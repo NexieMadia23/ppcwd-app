@@ -4,14 +4,15 @@
    ============================================================ */
 
 /* ---------------- Icons (inline SVG, stroke style) ---------------- */
-const I = (p, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${p}</svg>`;
+const I = (p, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${p}</svg>`;
 const ICONS = {
-  home: I('<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>'),
-  bill: I('<path d="M6 2h9l5 5v13.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 6 20.5Z"/><path d="M14 2v5h5"/><path d="M9 13h6M9 17h4"/>'),
-  pay: I('<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/>'),
+  home: I('<path d="M4 10.8 12 4l8 6.8"/><path d="M6 9.6V18a2.5 2.5 0 0 0 2.5 2.5h7A2.5 2.5 0 0 0 18 18V9.6"/><path d="M9.8 20.5v-5.2a1.6 1.6 0 0 1 1.6-1.6h1.2a1.6 1.6 0 0 1 1.6 1.6v5.2"/>'),
+  bill: I('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 11h7"/><path d="M8.5 15h3.5"/>'),
+  pay: I('<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 9.5h19"/><rect x="6" y="13.2" width="5" height="3.2" rx="1" fill="currentColor" stroke="none"/>'),
   mega: I('<path d="M3 11v2a1 1 0 0 0 1 1h3l7 4.5V6.5L7 11H4a1 1 0 0 0-1 0Z"/><path d="M18 9.5a3.5 3.5 0 0 1 0 5"/><path d="M20.5 7a7 7 0 0 1 0 10"/>'),
+  advisory: I('<path d="M10.3 4.4a2 2 0 0 1 3.4 0l7.2 12.4a2 2 0 0 1-1.7 3H4.8a2 2 0 0 1-1.7-3Z"/><path d="M12 9.5v4M12 17v.2"/>'),
   user: I('<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>'),
-  bell: I('<path d="M6 9a6 6 0 0 1 12 0c0 4.5 1.5 6 1.5 6h-15S6 13.5 6 9Z"/><path d="M10 19a2 2 0 0 0 4 0"/>'),
+  bell: I('<path d="M6.2 9.4a5.8 5.8 0 0 1 11.6 0c0 4.2 1.3 5.6 1.3 5.6.4.5 0 1.3-.7 1.3H5.6c-.7 0-1.1-.8-.7-1.3 0 0 1.3-1.4 1.3-5.6Z"/><path d="M10 18.9a2 2 0 0 0 4 0"/>'),
   chevR: I('<path d="m9 5 7 7-7 7"/>'),
   chevD: I('<path d="m5 9 7 7 7-7"/>'),
   chevL: I('<path d="m15 5-7 7 7 7"/>'),
@@ -21,7 +22,7 @@ const ICONS = {
   phone: I('<path d="M5 3.5h3.5L10.5 8 8 10a12 12 0 0 0 6 6l2-2.5 4.5 2V19a2 2 0 0 1-2 2A16.5 16.5 0 0 1 3 5.5a2 2 0 0 1 2-2Z"/>'),
   mail: I('<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>'),
   clock: I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>'),
-  drop: I('<path d="M12 3s6.5 7 6.5 11a6.5 6.5 0 0 1-13 0C5.5 10 12 3 12 3Z"/>'),
+  drop: I('<path d="M12 3s6.5 7 6.5 11a6.5 6.5 0 0 1-13 0C5.5 10 12 3 12 3Z"/><path d="M8.9 14.2a3 3 0 0 0 2.7 3.1"/>'),
   check: I('<path d="m4.5 12.5 5 5 10-11"/>'),
   checkC: I('<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.6 2.6L16 9.5"/>'),
   info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.2"/>'),
@@ -48,11 +49,47 @@ const ICONS = {
   globe: I('<circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z"/>'),
   text: I('<path d="M4 7V5h16v2"/><path d="M12 5v14M9 19h6"/>'),
   moon: I('<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>'),
+  menu: I('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  close: I('<path d="m6 6 12 12M18 6 6 18"/>'),
+};
+
+/* ---------------- Official partner logos ----------------
+   Files live in assets/logos/. Partner marks are cropped, transparent
+   512×512 PNGs; GCash is a square blue badge with a white mark.
+   `logo()` emits the <img> plus the coloured .l-* tile as a sibling
+   that is hidden, so if the image fails to load the onerror just
+   swaps visibility — no HTML is injected into the attribute (which
+   previously broke the markup with an unescaped quote). */
+const LOGO = {
+  ppcwd: "assets/logos/ppcwd.webp",
+  gcash: "assets/logos/gcash-mark.png",
+  palawan: "assets/logos/palawan-logocrop.png",
+  ecpay: "assets/logos/ecpay-logocrop.png",
+  sm: "assets/logos/sm-logocrop.png",
+  ml: "assets/logos/ml-logocrop.png",
+  ussc: "assets/logos/ussc-logocrop.png",
+};
+const logo = (key, alt = "", onDark = false, style = "", fallback = "") => {
+  const src = LOGO[key];
+  if (!src) return fallback;
+  /* GCash is a square blue badge (white mark on brand blue) that fills
+     the circle; partner marks are transparent PNGs that sit inside it. */
+  const badge = key === "gcash" ? " badge" : "";
+  const cls = `acc-logo acc-logo-img${badge}${onDark ? " on-dark" : ""}`;
+  const sty = style ? ` style="${style}"` : "";
+  /* Wrap keeps the <img> and its fallback tile in the same slot. */
+  return `<span class="logo-slot"${sty}>` +
+    `<span class="${cls}">` +
+    `<img src="${src}" alt="${esc(alt)}" loading="lazy" onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='grid'">` +
+    `</span>` +
+    `<span class="logo-fb" aria-hidden="true">${fallback}</span>` +
+    `</span>`;
 };
 
 /* ---------------- Data ---------------- */
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const DATA = {
-  customer: { name: "Maria Santos", first: "Maria", initials: "MS", acct: "0012-3456-7890", address: "Brgy. Sta. Lucia, Puerto Princesa City", type: "Residential" },
+  customer: { name: "Maria Santos", first: "Maria", initials: "MS", acct: "0012-3456-7890", meter: "MTR-0098213", address: "Brgy. Sta. Lucia, Puerto Princesa City", type: "Residential" },
   bill: {
     amount: "1,247.50", due: "November 10, 2026", dueShort: "Nov 10, 2026",
     period: "October 2026", prev: "51 – 100 cu.m", usage: "10 cu.m",
@@ -74,8 +111,12 @@ const DATA = {
     { period: "May 2026", amt: "998.50", status: "Paid", chip: "chip-green", date: "Paid Jun 9" },
   ],
   usage: [
-    { m: "May", v: 12 }, { m: "Jun", v: 14 }, { m: "Jul", v: 11 },
-    { m: "Aug", v: 15 }, { m: "Sep", v: 13 }, { m: "Oct", v: 10 },
+    { m: "May", v: 12, date: "May 6, 2026",  reading: "04,151", bill: "998.50",   septage: "0.00", penalty: "0.00" },
+    { m: "Jun", v: 14, date: "Jun 8, 2026",  reading: "04,165", bill: "1,044.00", septage: "0.00", penalty: "0.00" },
+    { m: "Jul", v: 11, date: "Jul 7, 2026",  reading: "04,176", bill: "1,205.25", septage: "0.00", penalty: "0.00" },
+    { m: "Aug", v: 15, date: "Aug 6, 2026",  reading: "04,191", bill: "1,389.75", septage: "0.00", penalty: "12.50" },
+    { m: "Sep", v: 13, date: "Sep 9, 2026",  reading: "04,204", bill: "1,112.00", septage: "0.00", penalty: "0.00" },
+    { m: "Oct", v: 10, date: "Oct 15, 2026", reading: "04,213", bill: "1,247.50", septage: "0.00", penalty: "0.00" },
   ],
   advisories: [
     {
@@ -139,14 +180,37 @@ const HELP_FAQ = [
 
 /* ---------------- State ---------------- */
 const state = {
-  screen: "home",
+  screen: "welcome",
   stack: [],
   billsTab: "current",
   advFilter: "All",
   historyFilter: "All",
+  /* Onboarding */
+  linked: false,
+  onbMode: "link",
+  onbStep: "form",
+  onbError: "",
+  onbValues: {},
+  onbToken: 0,
+  setupContext: "onboarding",
 };
 
 const TAB_SCREENS = ["home", "bills", "payments", "advisories", "account"];
+const ONB_SCREENS = ["welcome", "setup"];
+
+/* Linked water service accounts */
+state.accounts = [
+  {
+    acct: DATA.customer.acct,
+    label: "Home",
+    address: DATA.customer.address,
+    type: DATA.customer.type,
+    primary: true,
+  },
+];
+state.activeAcct = DATA.customer.acct;
+
+const activeAccount = () => state.accounts.find((a) => a.acct === state.activeAcct) || state.accounts[0] || DATA.customer;
 
 /* ---------------- Shared partials ---------------- */
 const statusBar = (onBlue = false) => `
@@ -160,14 +224,113 @@ const tabbar = (active) => {
     ["home", "Home", ICONS.home],
     ["bills", "Bills", ICONS.bill],
     ["payments", "Payments", ICONS.pay],
-    ["advisories", "Advisories", ICONS.mega],
+    ["advisories", "Advisories", ICONS.advisory],
     ["account", "Account", ICONS.user],
   ];
-  return `<nav class="tabbar">${tabs.map(([id, label, ic]) => `
-    <button data-tab="${id}" class="${active === id ? "active" : ""}">
-      <span class="tab-ic">${ic}</span><span class="tl">${label}</span>
-    </button>`).join("")}</nav>`;
+  const idx = Math.max(0, tabs.findIndex(([id]) => id === active));
+
+  /* White shell geometry — 348 × 68, with a true concave notch cut
+     from the top edge for the raised active puck. */
+  const W = 348, H = 68, R = 20, NR = 35, PAD = 30, STEP = (W - PAD * 2) / tabs.length;
+  const cx = PAD + (idx + 0.5) * STEP;
+  const notchL = +(cx - NR).toFixed(2);
+  const notchR = +(cx + NR).toFixed(2);
+  const shellPath = [
+    `M${R} 0`,
+    `H${notchL}`,
+    `A${NR} ${NR} 0 0 0 ${notchR} 0`,
+    `H${W - R}`,
+    `A${R} ${R} 0 0 1 ${W} ${R}`,
+    `V${H - R}`,
+    `A${R} ${R} 0 0 1 ${W - R} ${H}`,
+    `H${R}`,
+    `A${R} ${R} 0 0 1 0 ${H - R}`,
+    `V${R}`,
+    `A${R} ${R} 0 0 1 ${R} 0`,
+    "Z",
+  ].join(" ");
+
+  return `<nav class="tabbar" style="--puck:${((idx + 0.5) * 100) / tabs.length}%" aria-label="Primary">
+    <svg class="tabbar-shell" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="${shellPath}" />
+    </svg>
+    <div class="tab-items">
+      <span class="tab-puck" aria-hidden="true">${tabs[idx][2]}</span>
+      ${tabs.map(([id, label, ic]) => `
+        <button type="button" data-tab="${id}" class="${active === id ? "active" : ""}"${active === id ? ' aria-current="page"' : ""}>
+          <span class="tab-ic">${ic}</span><span class="tl">${label}</span>
+        </button>`).join("")}
+    </div>
+  </nav>`;
 };
+
+/* ------------------------------------------------------------------
+   menuFab — the GoTyme-style floating expandable menu.
+   Kept (unused) as a documented alternative to the bottom tab bar.
+   Its styles were removed from styles.css; restore them alongside this
+   function if you want to switch navigation back to the FAB menu.
+   ------------------------------------------------------------------ */
+const menuFab = (active) => {
+  const items = [
+    ["home", "Home", ICONS.home],
+    ["bills", "Bills", ICONS.bill],
+    ["payments", "Payments", ICONS.pay],
+    ["advisories", "Advisories", ICONS.advisory],
+    ["account", "Account", ICONS.user],
+  ];
+  return `<div class="fab" data-fab>
+    <button class="fab-scrim" type="button" data-fab-close aria-label="Close menu" tabindex="-1"></button>
+    <div class="fab-menu" role="menu" aria-label="Main menu">
+      ${items.map(([id, label, ic]) => `
+        <button class="fab-item ${active === id ? "active" : ""}" type="button" role="menuitem" data-fab-nav="${id}"${active === id ? ' aria-current="page"' : ""}>
+          <span class="fab-item-ic">${ic}</span><span class="fab-item-lb">${label}</span>
+        </button>`).join("")}
+      <button class="fab-item" type="button" role="menuitem" data-link-account>
+        <span class="fab-item-ic">${ICONS.link}</span><span class="fab-item-lb">Link accounts</span>
+      </button>
+    </div>
+    <button class="fab-btn" type="button" data-fab-toggle aria-expanded="false" aria-label="Open menu" aria-haspopup="true">
+      <span class="fab-btn-tx fab-btn-open">MENU</span>
+      <span class="fab-btn-tx fab-btn-close">CLOSE</span>
+    </button>
+  </div>`;
+};
+
+const accountSheet = () => `
+  <div class="acct-sheet" data-sheet hidden>
+    <button class="sheet-scrim" type="button" data-sheet-close aria-label="Close" tabindex="-1"></button>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="Linked accounts">
+      <div class="sheet-grab" aria-hidden="true"></div>
+      <div class="sheet-head">
+        <div>
+          <h3>Linked accounts</h3>
+          <p>${state.accounts.length} linked &middot; tap to switch</p>
+        </div>
+        <button class="icon-btn" type="button" data-sheet-close aria-label="Close">${ICONS.close}</button>
+      </div>
+      <div class="sheet-list">
+        ${state.accounts.map((a) => {
+          const active = a.acct === state.activeAcct;
+          return `
+        <button class="sheet-row${active ? " active" : ""}" type="button" data-acct="${esc(a.acct)}">
+          <span class="sheet-ic">${ICONS.drop}</span>
+          <span class="sheet-body">
+            <span class="t">${esc(a.acct)}${a.primary ? " &middot; Primary" : a.label ? ` &middot; ${esc(a.label)}` : ""}</span>
+            <span class="s">${esc(a.address || DATA.customer.address)}</span>
+          </span>
+          <span class="sheet-end">
+            ${active ? `<span class="chip chip-green"><span class="cd"></span>Active</span>` : `<span class="chip chip-gray">Switch</span>`}
+          </span>
+        </button>`;
+        }).join("")}
+      </div>
+      <button class="btn btn-primary btn-block sheet-add" type="button" data-link-account>
+        ${ICONS.plus} Link another account
+      </button>
+    </div>
+  </div>`;
+
+const brandBar = () => "";
 
 const backHeader = (title, action = "") => `
   <div class="page-titlebar">
@@ -182,15 +345,187 @@ const backHeader = (title, action = "") => `
    ============================================================ */
 const SCREENS = {};
 
+/* ---------- ONBOARDING: WELCOME ---------- */
+SCREENS.welcome = () => ({
+  html: `
+  <div class="screen">
+    <section class="onb onb-welcome">
+      <div class="onb-top">
+        <span class="onb-logo"><img src="${LOGO.ppcwd}" alt="PPCWD logo" onerror="this.closest('.onb-logo').remove()"></span>
+        <span class="onb-wordmark"><b>PPCWD</b><small>Puerto Princesa City Water District</small></span>
+      </div>
+
+      <div class="onb-main">
+        <h1>Clean water,<br><span>simply managed.</span></h1>
+        <p class="lead">Pay your bill, track your consumption, and get service updates from your water district &mdash; all in one place.</p>
+        <ul class="onb-feats">
+          <li><span class="onb-fi">${ICONS.wallet}</span><div><b>Pay in seconds</b><small>GCash, e-wallets, and partner payment centers.</small></div></li>
+          <li><span class="onb-fi">${ICONS.trend}</span><div><b>Know your usage</b><small>Monthly consumption trends and billing history.</small></div></li>
+          <li><span class="onb-fi">${ICONS.bell}</span><div><b>Stay informed</b><small>Advisories and interruptions for your barangay.</small></div></li>
+        </ul>
+
+        <div class="onb-stats">
+          <div><b>60k+</b><span>Households served</span></div>
+          <div><b>24/7</b><span>Support hotline</span></div>
+          <div><b>9</b><span>Payment partners</span></div>
+        </div>
+      </div>
+
+      <div class="onb-bottom">
+        <button class="btn btn-primary btn-block" data-onb="start">Get started ${ICONS.chevR}</button>
+        <p class="onb-fine">You'll link your water service account in the next step. It only takes a minute.</p>
+      </div>
+    </section>
+  </div>`,
+});
+
+/* ---------- ONBOARDING: ACCOUNT SETUP ---------- */
+const ONB_MODES = {
+  link: {
+    label: "Link existing",
+    icon: ICONS.link,
+    blurb: "Already a PPCWD customer? Link using the account and meter numbers printed on your bill.",
+    fields: [
+      { k: "acct", label: "Account number", ph: "0012-3456-7890", im: "numeric" },
+      { k: "meter", label: "Meter number", ph: "MTR-0098213", im: "text" },
+    ],
+  },
+  add: {
+    label: "Add account",
+    icon: ICONS.plus,
+    blurb: "Add another service connection using the account and meter numbers on your bill.",
+    fields: [
+      { k: "acct", label: "Account number", ph: "0012-3456-7890", im: "numeric" },
+      { k: "meter", label: "Meter number", ph: "MTR-0098213", im: "text" },
+      { k: "nick", label: "Account label (optional)", ph: "e.g. Home, Sari-sari store", im: "text" },
+    ],
+  },
+  open: {
+    label: "Open new",
+    icon: ICONS.drop,
+    blurb: "Apply for a new water service connection for your property.",
+    fields: [
+      { k: "name", label: "Full name", ph: "Maria Santos", im: "text" },
+      { k: "addr", label: "Service address", ph: "Brgy. Sta. Lucia, Puerto Princesa", im: "text" },
+      { k: "mobile", label: "Mobile number", ph: "0917 123 4567", im: "tel" },
+    ],
+  },
+};
+
+SCREENS.setup = () => {
+  const m = ONB_MODES[state.onbMode] || ONB_MODES.link;
+  const step = state.onbStep;
+  const v = state.onbValues || {};
+  const managing = state.setupContext === "manage";
+
+  const form = `
+    <p class="onb-mode-blurb">${m.blurb}</p>
+    <form id="onb-form" novalidate>
+      ${setupFields(m).map((f) => `
+        <label class="onb-field">
+          <span>${f.label}</span>
+          <input type="text" inputmode="${f.im}" name="${f.k}" placeholder="${f.ph}" value="${esc(v[f.k] || "")}" autocomplete="off" spellcheck="false" />
+        </label>`).join("")}
+      ${state.onbError ? `<div class="onb-error">${ICONS.alert}<span>${state.onbError}</span></div>` : ""}
+      <button class="btn btn-primary btn-block mt-14" type="submit" data-onb="submit">
+        ${state.onbMode === "open" ? "Submit application" : "Verify &amp; link account"}
+      </button>
+    </form>`;
+
+  const verify = `
+    <div class="onb-status">
+      <div class="onb-spin"></div>
+      <h4>Verifying your account&hellip;</h4>
+      <p>Matching your details with PPCWD records. Please don't close this screen.</p>
+    </div>
+    ${state.onbMode !== "open" ? `
+    <div class="onb-summary">
+      <div><span>Account number</span><span>${esc(v.acct || DATA.customer.acct)}</span></div>
+      <div><span>Meter number</span><span>${esc(v.meter || DATA.customer.meter || "MTR-0098213")}</span></div>
+      <div><span>Account name</span><span>${esc(DATA.customer.name)}</span></div>
+    </div>
+    <p class="onb-auto-note">${ICONS.info} Name shown from PPCWD records &mdash; no need to type it.</p>` : ""}`;
+
+  const rows = state.onbMode === "open"
+    ? [
+        ["Application no.", "PPCWD-APP-2026-0142"],
+        ["Applicant", esc(v.name || DATA.customer.name)],
+        ["Service address", esc(v.addr || DATA.customer.address)],
+      ]
+    : [
+        ["Account number", esc(v.acct || DATA.customer.acct)],
+        ["Meter number", esc(v.meter || DATA.customer.meter || "MTR-0098213")],
+        ["Account name", DATA.customer.name],
+        ["Service address", DATA.customer.address],
+      ];
+
+  const success = `
+    <div class="onb-status">
+      <div class="onb-ok">${ICONS.check}</div>
+      <h4>${state.onbMode === "open" ? "Application submitted" : "Account linked"}</h4>
+      <p>${state.onbMode === "open"
+        ? "We received your application. A PPCWD representative will contact you within 3 working days."
+        : "You're all set. Your water service account is now connected to the app."}</p>
+    </div>
+    <div class="onb-summary">
+      ${rows.map(([k, val]) => `<div><span>${k}</span><span>${val}</span></div>`).join("")}
+    </div>
+    <button class="btn btn-primary btn-block mt-14" data-onb="finish">
+      ${managing ? "Done" : state.onbMode === "open" ? "Continue to dashboard" : "Go to dashboard"} ${ICONS.chevR}
+    </button>`;
+
+  const body = step === "verify" ? verify : step === "success" ? success : form;
+
+  return {
+    html: `
+  <div class="screen">
+    <div class="page-titlebar">
+      ${step === "form" ? (managing
+        ? `<button class="back-btn" data-back aria-label="Back">${ICONS.chevL}</button>`
+        : `<button class="back-btn" data-onb="back" aria-label="Back">${ICONS.chevL}</button>`) : ""}
+      <h2>${managing ? "Link account" : "Account setup"}</h2>
+    </div>
+    <div class="pad after-bar">
+      ${step === "form" ? `
+      <div class="onb-head">
+        <span class="onb-step">${managing ? "Verify ownership" : "Step 1 of 2 &middot; Verify your account"}</span>
+        <h3>${managing ? "Link another service" : "Connect your water service"}</h3>
+        <p>${managing
+          ? "Enter the details of the water service account you want to add to this app."
+          : "Choose how you'd like to add your account, then enter your details for verification."}</p>
+      </div>
+      ${!managing ? `<div class="onb-modes">
+        ${Object.entries(ONB_MODES).map(([key, mode]) => `
+          <button type="button" class="onb-mode ${state.onbMode === key ? "active" : ""}" data-onbmode="${key}">
+            ${mode.icon}<span>${mode.label}</span>
+          </button>`).join("")}
+      </div>` : ""}` : ""}
+
+      <div class="card onb-card">${body}</div>
+
+      ${step === "form" ? `
+      <div class="onb-note">${ICONS.shield}<span>Your details are checked against PPCWD records. We never share your information with third parties.</span></div>` : ""}
+      <p class="footer-note">Need help? Call the 24/7 hotline at (048) 726-3344</p>
+    </div>
+  </div>`,
+  };
+};
+
 /* ---------- HOME ---------- */
 SCREENS.home = () => ({
   tab: "home",
   html: `
   <div class="screen">
+    ${brandBar()}
     <div class="app-header">
-      <div class="hello">
-        <small>Magandang araw,</small>
-        <h2>${DATA.customer.name}</h2>
+      <div class="hello-row">
+        <button type="button" class="account-btn" data-tab="account" aria-label="Open account">
+          <span class="avatar" aria-hidden="true">${ICONS.user}</span>
+        </button>
+        <div class="hello">
+          <small>Magandang araw,</small>
+          <h2>${DATA.customer.name}</h2>
+        </div>
       </div>
       <button class="icon-btn" data-nav="notifications" aria-label="Notifications, 3 unread">
         ${ICONS.bell}<span class="badge">3</span>
@@ -198,21 +533,23 @@ SCREENS.home = () => ({
     </div>
 
     <div class="pad">
-      <!-- Balance hero -->
+      <!-- Balance hero — the one dark surface on the dashboard -->
       <section class="balance-card">
         <div class="balance-top">
           <div class="bt-left">
             <div class="lbl">Current balance</div>
             <div class="balance-amount">&#8369;${DATA.bill.amount}</div>
           </div>
-          <span class="pill pill-glass"><span class="pdot"></span> Service Active</span>
+          <button class="acct-pill" type="button" data-open-sheet aria-label="Switch or link accounts">
+            ${ICONS.drop}<span><b>${state.accounts.length}</b> account${state.accounts.length === 1 ? "" : "s"}</span>${ICONS.chevR}
+          </button>
         </div>
         <div class="balance-meta">
           <span class="pill pill-countdown">${ICONS.clock.replace("<svg", '<svg style="width:13px;height:13px"')} Due in 20 days</span>
           <span class="pill pill-glass">${ICONS.calendar.replace("<svg", '<svg style="width:13px;height:13px"')} ${DATA.bill.dueShort}</span>
         </div>
         <div class="balance-foot">
-          <span class="acct-no">Account ${DATA.customer.acct}</span>
+          <span class="acct-no">Account ${activeAccount().acct}</span>
         </div>
         <div class="balance-actions">
           <button class="btn btn-aqua" data-nav="payments">${ICONS.pay} Pay Now</button>
@@ -220,40 +557,40 @@ SCREENS.home = () => ({
         </div>
       </section>
 
-      <!-- Quick actions -->
+      <!-- Shortcuts — compact white tiles, one primary action each -->
       <div class="quick-actions">
-        <button class="qa" data-nav="payments"><span class="qa-ic">${ICONS.wallet}</span><span>Pay Bill</span></button>
         <button class="qa" data-nav="bills"><span class="qa-ic">${ICONS.bill}</span><span>My Bills</span></button>
         <button class="qa" data-nav="usage"><span class="qa-ic">${ICONS.drop}</span><span>My Usage</span></button>
+        <button class="qa" data-open-sheet><span class="qa-ic">${ICONS.user}</span><span>Accounts</span></button>
         <button class="qa" data-nav="help"><span class="qa-ic">${ICONS.help}</span><span>Get Help</span></button>
       </div>
 
-      <!-- Advisory preview -->
+      <!-- Latest advisory -->
       <div class="section-head">
         <h3>Latest advisory</h3>
         <button class="link" data-tab="advisories">View all ${ICONS.chevR}</button>
       </div>
       <button class="adv-preview" data-nav="advisory-detail" data-id="a1">
         <span class="adv-preview-top">
-          <span class="chip chip-orange"><span class="cd"></span> Service Interruption</span>
+          <span class="chip chip-orange-light"><span class="cd"></span> Service Interruption</span>
           <span class="adv-date">${DATA.advisories[0].date}</span>
         </span>
         <span class="adv-preview-title">${DATA.advisories[0].title}</span>
         <span class="adv-preview-more">Read More ${ICONS.chevR}</span>
       </button>
 
-      <!-- Usage snapshot -->
+      <!-- Usage snapshot — white card with an inline stat row -->
       <div class="section-head">
         <h3>Water consumption</h3>
         <button class="link" data-nav="usage">Details ${ICONS.chevR}</button>
       </div>
       <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="mini-stat">
           <div>
-            <div class="text-muted" style="font-weight:700">This month</div>
-            <div style="font-size:26px;font-weight:800;letter-spacing:-.6px;margin-top:2px">10 <span style="font-size:14px;color:var(--muted)">cu.m</span></div>
+            <div class="mini-lbl">This month</div>
+            <div class="mini-val">10 <span>cu.m</span></div>
           </div>
-          <span class="chip chip-green"><span class="cd"></span> 3 cu.m less than September</span>
+          <span class="chip chip-green-light"><span class="cd"></span> 3 cu.m less</span>
         </div>
         ${miniChart()}
       </div>
@@ -261,16 +598,18 @@ SCREENS.home = () => ({
       <p class="footer-note">PPCWD Customer App &middot; Serving Puerto Princesa City since 1974</p>
     </div>
     <div class="after-tabs" style="height:8px"></div>
-  </div>
-  ${tabbar("home")}`,
+  </div>`,
 });
 
 function miniChart() {
-  const max = 16;
+  const vals = DATA.usage.map((d) => d.v);
+  const max = Math.max(...vals, 16), min = Math.min(...vals);
+  const span = max - min || 1;
+  const lvl = (v) => Math.round(((v - min) / span) * 100);
   return `<div class="chart" style="height:110px;margin-top:14px">${DATA.usage.map((d, i) => `
     <div class="col ${i === DATA.usage.length - 1 ? "now" : ""}">
       <span class="vval">${d.v}</span>
-      <div class="bar" style="height:${(d.v / max) * 78}px"></div>
+      <div class="bar" style="height:${(d.v / max) * 78}px;--lvl:${lvl(d.v)}%"></div>
       <span class="mlbl">${d.m}</span>
     </div>`).join("")}</div>`;
 }
@@ -292,17 +631,16 @@ SCREENS.bills = () => ({
       ${state.billsTab === "current" ? billsCurrent() : billsHistory()}
     </div>
     <div class="after-tabs" style="height:20px"></div>
-  </div>
-  ${tabbar("bills")}`,
+  </div>`,
 });
 
 function billsCurrent() {
   return `
-  <div class="mt-16 card">
+  <div class="mt-16 card card-dark">
     <div class="bill-hero">
       <span class="period">${DATA.bill.period} &middot; Statement</span>
       <span class="amount">&#8369;${DATA.bill.amount}</span>
-      <span class="sub">Due on or before <b style="color:var(--orange)">${DATA.bill.due}</b></span>
+      <span class="sub">Due on or before <b style="color:#FFD014">${DATA.bill.due}</b></span>
     </div>
     <div class="bill-divider"></div>
     ${DATA.bill.lines.map(([k, v]) => `<div class="kv"><span class="k">${k}</span><span class="v">&#8369;${v}</span></div>`).join("")}
@@ -352,7 +690,7 @@ function billsHistory() {
         <span class="list-end">
           <span style="text-align:right">
             <span class="amt">&#8369;${h.amt}</span>
-            <span style="display:block;margin-top:4px"><span class="chip ${h.chip}"><span class="cd"></span>${h.status}</span></span>
+            <span style="display:block;margin-top:4px"><span class="chip ${h.chip}-light"><span class="cd"></span>${h.status}</span></span>
           </span>
           ${ICONS.chevR}
         </span>
@@ -372,15 +710,15 @@ SCREENS["bill-detail"] = () => ({
           <div>
             <div class="text-muted" style="font-weight:700">Account name</div>
             <div style="font-weight:800;font-size:15.5px;margin-top:2px">${DATA.customer.name}</div>
-            <div class="text-muted mt-4" style="margin-top:4px">Acct no. ${DATA.customer.acct}</div>
+            <div class="text-muted mt-4" style="margin-top:4px">Acct no. ${activeAccount().acct}</div>
           </div>
-          <span class="chip chip-orange"><span class="cd"></span> Unpaid</span>
+          <span class="chip chip-orange-light"><span class="cd"></span> Unpaid</span>
         </div>
         <div class="bill-divider"></div>
         <div class="kv"><span class="k">Billing period</span><span class="v">${DATA.bill.period}</span></div>
         <div class="kv"><span class="k">Meter reading</span><span class="v">04,213 cu.m</span></div>
         <div class="kv"><span class="k">Consumption</span><span class="v">10 cu.m</span></div>
-        <div class="kv"><span class="k">Due date</span><span class="v" style="color:var(--orange)">${DATA.bill.dueShort}</span></div>
+        <div class="kv"><span class="k">Due date</span><span class="v" style="color:#B45309">${DATA.bill.dueShort}</span></div>
         <div class="kv"><span class="k">Reference no.</span><span class="v">${DATA.bill.ref}</span></div>
       </div>
 
@@ -409,15 +747,14 @@ SCREENS.payments = () => ({
     <div class="page-titlebar"><h2>Payments</h2></div>
     <div class="pad">
       <!-- GCash primary -->
-      <section class="balance-card" style="background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.05)),linear-gradient(140deg,#0A3584,#1764BC 55%,#30B3DD)">
+      <section class="balance-card" style="background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.02)),var(--card-grad)">
         <div class="balance-top">
           <div>
             <div class="lbl">Recommended &middot; Instant posting</div>
             <div style="font-size:25px;font-weight:800;margin-top:8px;letter-spacing:-.5px">Pay with GCash</div>
           </div>
-          <span class="acc-logo l-gcash" style="width:52px;height:52px;font-size:14px;border-radius:15px">GCash</span>
+          ${logo("gcash", "GCash", true, "width:84px;height:50px;flex:none", `<span class="acc-logo l-gcash" style="width:84px;height:50px;font-size:14px;border-radius:12px">GCash</span>`)}
         </div>
-        <p style="font-size:13px;opacity:.9;margin-top:10px;line-height:1.5">No extra fees. Your payment reflects on your account within minutes.</p>
         <div class="balance-actions">
           <button class="btn btn-aqua" data-nav="gcash-guide">${ICONS.send} Start payment guide</button>
         </div>
@@ -429,12 +766,12 @@ SCREENS.payments = () => ({
           <li><span class="n"></span> Open your GCash app and log in.</li>
           <li><span class="n"></span> Tap <b>Pay Bills</b>, then choose <b>Water Utility</b>.</li>
           <li><span class="n"></span> Select <b>PPCWD</b> as the biller.</li>
-          <li><span class="n"></span> Enter your account number <b>${DATA.customer.acct}</b> and the amount due.</li>
+          <li><span class="n"></span> Enter your account number <b>${activeAccount().acct}</b> and the amount due.</li>
           <li><span class="n"></span> Confirm, then keep the GCash reference number for your records.</li>
         </ol>
         <div class="need-box">
           <div class="nb-t">${ICONS.info} You will need</div>
-          <p>Account number (${DATA.customer.acct}) &middot; Account name (${DATA.customer.name}) &middot; Amount due (&#8369;${DATA.bill.amount})</p>
+          <p>Account number (${activeAccount().acct}) &middot; Account name (${DATA.customer.name}) &middot; Amount due (&#8369;${DATA.bill.amount})</p>
         </div>
       </div>
 
@@ -444,7 +781,7 @@ SCREENS.payments = () => ({
 
       <div class="acc">
         <button class="acc-head" data-acc>
-          <span class="acc-logo l-palawan">Palawan</span>
+          ${logo("palawan", "Palawan Pawnshop", false, "", `<span class="acc-logo l-palawan">Palawan</span>`)}
           <span class="acc-body-t"><span class="t">Palawan Pawnshop</span><span class="s">Over-the-counter &middot; posts within 24 hrs</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
@@ -462,7 +799,7 @@ SCREENS.payments = () => ({
 
       <div class="acc">
         <button class="acc-head" data-acc>
-          <span class="acc-logo l-ecpay">ECPay</span>
+          ${logo("ecpay", "ECPay", false, "", `<span class="acc-logo l-ecpay">ECPay</span>`)}
           <span class="acc-body-t"><span class="t">ECPay</span><span class="s">Partner stores and remittance centers</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
@@ -480,7 +817,7 @@ SCREENS.payments = () => ({
 
       <div class="acc">
         <button class="acc-head" data-acc>
-          <span class="acc-logo l-sm">SM</span>
+          ${logo("sm", "SM Bills Payment", false, "", `<span class="acc-logo l-sm">SM</span>`)}
           <span class="acc-body-t"><span class="t">SM Bills Pay</span><span class="s">Any SM Business Center or cashier</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
@@ -498,7 +835,7 @@ SCREENS.payments = () => ({
 
       <div class="acc">
         <button class="acc-head" data-acc>
-          <span class="acc-logo l-ml">ML</span>
+          ${logo("ml", "M Lhuillier", false, "", `<span class="acc-logo l-ml">ML</span>`)}
           <span class="acc-body-t"><span class="t">MLhuillier</span><span class="s">Kwarta Padala branches nationwide</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
@@ -516,7 +853,7 @@ SCREENS.payments = () => ({
 
       <div class="acc">
         <button class="acc-head" data-acc>
-          <span class="acc-logo l-ussc">USSC</span>
+          ${logo("ussc", "USSC", false, "", `<span class="acc-logo l-ussc">USSC</span>`)}
           <span class="acc-body-t"><span class="t">USSC</span><span class="s">Universal Stores and Services</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
@@ -539,8 +876,7 @@ SCREENS.payments = () => ({
       <p class="footer-note">Payments posted within 24 hours &middot; Office hours 8:00 AM &ndash; 5:00 PM</p>
     </div>
     <div class="after-tabs" style="height:16px"></div>
-  </div>
-  ${tabbar("payments")}`,
+  </div>`,
 });
 
 /* ---------- GCASH GUIDE ---------- */
@@ -550,10 +886,10 @@ SCREENS["gcash-guide"] = () => ({
     ${backHeader("Pay with GCash")}
     <div class="pad after-bar">
       <div class="card" style="text-align:center;padding:22px">
-        <span class="acc-logo l-gcash" style="width:64px;height:64px;font-size:16px;border-radius:19px;margin:0 auto">GCash</span>
+        ${logo("gcash", "GCash", false, "width:88px;height:56px;margin:0 auto", `<span class="acc-logo l-gcash" style="width:88px;height:56px;font-size:16px;border-radius:14px;margin:0 auto">GCash</span>`)}
         <div class="text-muted mt-12" style="font-weight:700">Amount to pay</div>
         <div style="font-size:34px;font-weight:800;letter-spacing:-1px;margin-top:4px">&#8369;${DATA.bill.amount}</div>
-        <div class="mt-10"><span class="chip chip-blue"><span class="cd"></span> ${DATA.bill.period} bill &middot; Due ${DATA.bill.dueShort}</span></div>
+        <div class="mt-10"><span class="chip chip-blue-light"><span class="cd"></span> ${DATA.bill.period} bill &middot; Due ${DATA.bill.dueShort}</span></div>
       </div>
 
       <div class="section-head"><h3>Follow these 4 steps</h3></div>
@@ -565,7 +901,7 @@ SCREENS["gcash-guide"] = () => ({
           <li><span class="n"></span> Enter the details below, confirm, and screenshot your receipt.
             <div class="need-box" style="margin-top:10px">
               <div class="nb-t">${ICONS.copy} Enter exactly</div>
-              <p>Account number: <b>${DATA.customer.acct}</b><br>Account name: <b>${DATA.customer.name}</b><br>Amount: <b>&#8369;${DATA.bill.amount}</b><br> Email (optional): for your digital receipt</p>
+              <p>Account number: <b>${activeAccount().acct}</b><br>Account name: <b>${DATA.customer.name}</b><br>Amount: <b>&#8369;${DATA.bill.amount}</b><br> Email (optional): for your digital receipt</p>
             </div>
           </li>
         </ol>
@@ -588,23 +924,14 @@ SCREENS["payment-success"] = () => ({
   <div class="screen">
     <div class="success-wrap after-bar">
       <div class="success-ring">${ICONS.check}</div>
-      <h2 style="font-size:22px;font-weight:800">Payment recorded</h2>
-      <p class="text-muted mt-8" style="max-width:280px">Thank you! Your GCash payment is being verified and will post to your account within minutes.</p>
+      <h2 style="font-size:22px;font-weight:800">Payment submitted</h2>
+      <p class="text-muted mt-8" style="max-width:280px">Ipinasa na ang pagmamarka bilang bayad. I-verify pa rin ng PPCWD ang bayad mo sa GCash bago ito mag-reflect sa account.</p>
 
       <div class="card mt-20" style="width:100%;text-align:left">
-        <div class="kv"><span class="k">Amount paid</span><span class="v">&#8369;${DATA.bill.amount}</span></div>
-        <div class="kv"><span class="k">Biller</span><span class="v">PPCWD</span></div>
-        <div class="kv"><span class="k">Account no.</span><span class="v">${DATA.customer.acct}</span></div>
+        <div class="kv"><span class="k">Amount</span><span class="v">&#8369;${DATA.bill.amount}</span></div>
         <div class="kv"><span class="k">Billing period</span><span class="v">${DATA.bill.period}</span></div>
-        <div class="kv"><span class="k">Date paid</span><span class="v">Oct 21, 2026 &middot; 9:41 AM</span></div>
-        <div class="bill-divider"></div>
-        <div class="kv total"><span class="k">Reference no.</span><span class="v" style="font-size:14px">GCASH-8F42K91L</span></div>
       </div>
 
-      <div class="mt-16" style="display:flex;gap:10px;width:100%">
-        <button class="btn btn-outline btn-sm" style="flex:1" data-toast="Receipt saved to your device.">${ICONS.download} Save receipt</button>
-        <button class="btn btn-outline btn-sm" style="flex:1" data-toast="Share sheet opened.">${ICONS.share} Share</button>
-      </div>
       <button class="btn btn-primary btn-block mt-12" data-tab="home">Back to Home</button>
     </div>
   </div>`,
@@ -645,7 +972,7 @@ SCREENS.advisories = () => {
               <span class="adv-bar ${a.color === "sky" ? "" : a.color}"></span>
               <span style="flex:1">
                 <span class="t">${a.title}</span>
-                <span class="s"><span class="chip chip-${a.color === "sky" ? "blue" : a.color === "aqua" ? "aqua" : "orange"}">${a.cat}</span> ${a.date}</span>
+                <span class="s"><span class="chip chip-${a.color === "sky" ? "blue" : a.color === "aqua" ? "aqua" : "orange"}-light">${a.cat}</span> ${a.date}</span>
               </span>
               <span class="list-end">${ICONS.chevR}</span>
             </button>`).join("")}
@@ -655,7 +982,7 @@ SCREENS.advisories = () => {
       </div>
       <div class="after-tabs" style="height:16px"></div>
     </div>
-    ${tabbar("advisories")}`,
+  `,
   };
 };
 
@@ -695,7 +1022,7 @@ SCREENS["advisory-detail"] = (params) => {
       ${backHeader("Advisory", `<button class="icon-btn" data-toast="Advisory shared.">${ICONS.share}</button>`)}
       <div class="pad after-bar">
         <div class="card">
-          <span class="chip chip-${a.color === "sky" ? "blue" : a.color === "aqua" ? "aqua" : "orange"}"><span class="cd"></span>${a.cat}</span>
+          <span class="chip chip-${a.color === "sky" ? "blue" : a.color === "aqua" ? "aqua" : "orange"}-light"><span class="cd"></span>${a.cat}</span>
           <h3 style="font-size:19px;font-weight:800;line-height:1.35;margin-top:12px;letter-spacing:-.3px">${a.title}</h3>
           <div style="display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12.5px;font-weight:600;margin-top:10px">
             ${ICONS.clock.replace("<svg", '<svg style="width:15px;height:15px"')} ${a.date} &middot; PPCWD Information Office
@@ -703,11 +1030,11 @@ SCREENS["advisory-detail"] = (params) => {
           ${a.areas.length ? `
           <div class="bill-divider"></div>
           <div class="text-muted" style="font-weight:700;margin-bottom:8px">Affected areas</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">${a.areas.map((ar) => `<span class="chip chip-gray">${ar}</span>`).join("")}</div>` : ""}
+          <div style="display:flex;gap:8px;flex-wrap:wrap">${a.areas.map((ar) => `<span class="chip chip-gray-light">${ar}</span>`).join("")}</div>` : ""}
         </div>
 
         <div class="card mt-14">
-          ${a.body.split("\n\n").map((p) => `<p style="font-size:14px;line-height:1.65;color:var(--ink-2);font-weight:500;margin-bottom:12px">${p}</p>`).join("").replace(/margin-bottom:12px$/, "")}
+          ${a.body.split("\n\n").map((p) => `<p style="font-size:14px;line-height:1.65;color:#33415C;font-weight:500;margin-bottom:12px">${p}</p>`).join("").replace(/margin-bottom:12px$/, "")}
         </div>
 
         <div class="mt-14 tip-card">
@@ -725,30 +1052,38 @@ SCREENS.account = () => ({
   tab: "account",
   html: `
   <div class="screen on-tint">
-    <div class="page-titlebar"><h2>Account</h2></div>
-    <div class="pad">
+    ${backHeader("Account")}
+    <div class="pad after-bar">
       <div class="card" style="display:flex;align-items:center;gap:14px">
-        <span class="avatar" style="width:56px;height:56px;font-size:19px">${DATA.customer.initials}</span>
+        <span class="avatar" style="width:56px;height:56px">${ICONS.user}</span>
         <div style="flex:1">
           <div style="font-weight:800;font-size:17px">${DATA.customer.name}</div>
-          <div class="text-muted" style="margin-top:2px">Acct no. ${DATA.customer.acct}</div>
-          <div class="mt-8"><span class="chip chip-green"><span class="cd"></span> Service Active</span> <span class="chip chip-blue"><span class="cd"></span> ${DATA.customer.type}</span></div>
+          <div class="text-muted" style="margin-top:2px">Acct no. ${activeAccount().acct}</div>
+          <div class="mt-8"><span class="chip chip-green-light"><span class="cd"></span> Service Active</span> <span class="chip chip-blue-light"><span class="cd"></span> ${activeAccount().type || DATA.customer.type}</span></div>
         </div>
         <button class="icon-btn" data-toast="Editing personal information&hellip;">${ICONS.edit}</button>
       </div>
 
-      <div class="section-head"><h3>Linked accounts</h3></div>
+      <div class="section-head">
+        <h3>Linked accounts</h3>
+        <button class="icon-btn icon-btn-sm" type="button" data-link-account aria-label="Link another account">${ICONS.plus}</button>
+      </div>
       <div class="row-card">
-        <button class="list-row" data-toast="Account details opened.">
-          <span class="list-ic">${ICONS.drop}</span>
-          <span class="list-body"><span class="t">${DATA.customer.acct}</span><span class="s">${DATA.customer.address}</span></span>
-          <span class="list-end"><span class="chip chip-green"><span class="cd"></span>Primary</span>${ICONS.chevR}</span>
-        </button>
-        <button class="list-row" data-toast="Add another water account.">
-          <span class="list-ic aqua">${ICONS.plus}</span>
-          <span class="list-body"><span class="t">Add another account</span><span class="s">Link a second water connection</span></span>
-          <span class="list-end">${ICONS.chevR}</span>
-        </button>
+        ${state.accounts.map((a) => {
+          const active = a.acct === state.activeAcct;
+          return `
+        <button class="list-row" data-acct="${esc(a.acct)}" aria-pressed="${active}">
+          <span class="list-ic${active ? "" : " aqua"}">${ICONS.drop}</span>
+          <span class="list-body">
+            <span class="t">${esc(a.acct)}${a.primary ? " &middot; Primary" : a.label ? ` &middot; ${esc(a.label)}` : ""}</span>
+            <span class="s">${esc(a.address || DATA.customer.address)}</span>
+          </span>
+          <span class="list-end">
+            ${active ? `<span class="chip chip-green-light"><span class="cd"></span>Active</span>` : `<span class="chip chip-gray-light">Switch</span>`}
+            ${ICONS.chevR}
+          </span>
+        </button>`;
+        }).join("")}
       </div>
 
       <div class="section-head"><h3>Settings &amp; preferences</h3></div>
@@ -788,10 +1123,9 @@ SCREENS.account = () => ({
         </button>
       </div>
       <p class="footer-note">PPCWD Customer App &middot; Version 2.0</p>
+      <div class="after-tabs" style="height:16px"></div>
     </div>
-    <div class="after-tabs" style="height:16px"></div>
-  </div>
-  ${tabbar("account")}`,
+  </div>`,
 });
 
 /* ---------- SETTINGS ---------- */
@@ -813,7 +1147,7 @@ SCREENS.settings = () => ({
           <button class="switch on" data-switch></button>
         </div>
         <div class="toggle-row">
-          <span class="list-ic aqua">${ICONS.mega}</span>
+          <span class="list-ic aqua">${ICONS.advisory}</span>
           <span class="tr-body"><span class="t">Advisory notifications</span><span class="s">Service interruptions and announcements</span></span>
           <button class="switch on" data-switch></button>
         </div>
@@ -841,7 +1175,7 @@ SCREENS.settings = () => ({
       <div class="section-head"><h3>Payment preferences</h3></div>
       <div class="row-card">
         <button class="list-row" data-tab="payments">
-          <span class="acc-logo l-gcash" style="width:42px;height:42px;border-radius:12px;font-size:11px">GCash</span>
+          ${logo("gcash", "GCash", false, "width:60px;height:38px;flex:none", `<span class="acc-logo l-gcash" style="width:60px;height:38px;border-radius:10px;font-size:11px">GCash</span>`)}
           <span class="list-body"><span class="t">Preferred payment method</span><span class="s">GCash &middot; ending in 7890</span></span>
           <span class="list-end">${ICONS.chevR}</span>
         </button>
@@ -877,7 +1211,7 @@ SCREENS.notifications = () => ({
           <span style="flex:1"><span class="t">Payment received &mdash; September bill</span><span class="s">&#8369;1,112.00 via GCash. Thank you!</span><span class="time">Oct 8</span></span>
         </div>
         <div class="notif">
-          <span class="list-ic sky" style="width:38px;height:38px;border-radius:11px">${ICONS.mega}</span>
+          <span class="list-ic sky" style="width:38px;height:38px;border-radius:11px">${ICONS.advisory}</span>
           <span style="flex:1"><span class="t">New advisory: Pay your water bill with GCash</span><span class="s">Payments now post within minutes.</span><span class="time">Oct 12</span></span>
         </div>
         <div class="notif">
@@ -892,7 +1226,10 @@ SCREENS.notifications = () => ({
 
 /* ---------- USAGE ---------- */
 SCREENS.usage = () => {
-  const max = 16;
+  const vals = DATA.usage.map((d) => d.v);
+  const max = Math.max(...vals), min = Math.min(...vals);
+  const span = max - min || 1;
+  const lvl = (v) => Math.round(((v - min) / span) * 100);
   const now = 10, prev = 13;
   const diff = ((now - prev) / prev) * 100;
   return {
@@ -900,7 +1237,7 @@ SCREENS.usage = () => {
     <div class="screen on-tint">
       ${backHeader("Water Consumption")}
       <div class="pad after-bar">
-        <div class="card" style="background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.05)),linear-gradient(150deg,#061A56,#0A3584 55%,#1764BC);border:1px solid var(--glass-border);color:#fff;box-shadow:var(--shadow-blue)">
+        <div class="card card-dark">
           <div class="lbl" style="font-size:13px;font-weight:600;opacity:.85">October 2026 usage</div>
           <div style="font-size:40px;font-weight:800;letter-spacing:-1.2px;margin-top:4px">10 <span style="font-size:16px;opacity:.85">cu.m</span></div>
           <div class="mt-10"><span class="pill pill-glass"><span class="pdot" style="background:var(--aqua)"></span> ${Math.abs(diff).toFixed(0)}% less than last month</span></div>
@@ -915,10 +1252,37 @@ SCREENS.usage = () => {
             ${DATA.usage.map((d, i) => `
               <div class="col ${i === DATA.usage.length - 1 ? "now" : ""}">
                 <span class="vval">${d.v}</span>
-                <div class="bar" style="height:${(d.v / max) * 100}px"></div>
+                <div class="bar" style="height:${(d.v / max) * 100}px;--lvl:${lvl(d.v)}%"></div>
                 <span class="mlbl">${d.m}</span>
               </div>`).join("")}
           </div>
+          <p class="footer-note" style="margin-top:12px;text-align:left">Darker bars mean higher consumption &mdash; August was your peak.</p>
+        </div>
+
+        <div class="section-head"><h3>Billing breakdown</h3></div>
+        <div class="card">
+          <div class="utbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Bill date</th><th>Reading</th><th>Consumption</th>
+                  <th>Bill amount</th><th>Septage fee</th><th>Penalty</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${DATA.usage.map((d) => `
+                <tr>
+                  <td>${d.date}</td>
+                  <td class="mut">${d.reading}</td>
+                  <td>${d.v} cu.m</td>
+                  <td>&#8369;${d.bill}</td>
+                  <td class="mut">${d.septage === "0.00" ? "&mdash;" : "&#8369;" + d.septage}</td>
+                  <td class="${d.penalty === "0.00" ? "mut" : "pen"}">${d.penalty === "0.00" ? "&mdash;" : "&#8369;" + d.penalty}</td>
+                </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+          <p class="footer-note" style="margin-top:12px">Swipe the table sideways to see all charges</p>
         </div>
 
         <div class="section-head"><h3>This month vs last month</h3></div>
@@ -963,7 +1327,7 @@ SCREENS.help = () => ({
       <div class="card" style="text-align:center">
         <span class="list-ic" style="width:56px;height:56px;border-radius:17px;margin:0 auto">${ICONS.phone.replace("<svg", '<svg style="width:26px;height:26px"')}</span>
         <div style="font-weight:800;font-size:17px;margin-top:12px">24/7 Customer Hotline</div>
-        <div style="font-size:22px;font-weight:800;color:var(--aqua);margin-top:6px;letter-spacing:-.4px;text-shadow:0 0 16px rgba(75,246,240,.5)">(048) 726-3344</div>
+        <div style="font-size:22px;font-weight:800;color:#1764BC;margin-top:6px;letter-spacing:-.4px">(048) 726-3344</div>
         <div class="text-muted" style="margin-top:4px">For leaks, line breaks, and service concerns</div>
         <a class="btn btn-primary btn-block mt-14" href="tel:+63487263344">${ICONS.phone} Call now</a>
         <a class="btn btn-soft btn-block mt-10" href="mailto:customercare@ppcwd.gov.ph">${ICONS.mail} Email customercare@ppcwd.gov.ph</a>
@@ -991,7 +1355,7 @@ SCREENS.help = () => ({
             <span class="acc-chev">${ICONS.chevD}</span>
           </button>
           <div class="acc-panel"><div class="acc-panel-inner" style="padding-top:12px">
-            <p style="font-size:13.5px;line-height:1.6;color:var(--ink-2);font-weight:500">${f.a}</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#33415C;font-weight:500">${f.a}</p>
           </div></div>
         </div>`).join("")}
       <p class="footer-note">Still need help? Call us &mdash; we are happy to assist.</p>
@@ -1003,11 +1367,17 @@ SCREENS.help = () => ({
    Router
    ============================================================ */
 function render(screenKey, params, push = true) {
+  if (!state.linked && !ONB_SCREENS.includes(screenKey)) screenKey = "welcome";
+  if (state.linked && screenKey === "welcome") screenKey = "home";
+  if (state.linked && screenKey === "setup" && state.setupContext !== "manage") screenKey = "home";
+  if (!state.linked && screenKey === "setup" && state.setupContext === "manage") state.setupContext = "onboarding";
   const def = SCREENS[screenKey];
   if (!def) return;
   const out = def(params);
   const phone = document.getElementById("phone-screen");
-  phone.innerHTML = `${statusBar(false)}<div id="screen-mount" style="flex:1;display:flex;flex-direction:column;min-height:0">${out.html}</div><div class="home-indicator"></div>`;
+  const bar = out.tab ? tabbar(out.tab) : "";
+  const sheet = out.tab ? accountSheet() : "";
+  phone.innerHTML = `${statusBar(!!out.blueStatus)}<div id="screen-mount" class="${bar ? "has-bar" : ""}" style="flex:1;display:flex;flex-direction:column;min-height:0">${out.html}</div>${bar}${sheet}<div class="home-indicator"></div>`;
 
   if (push && state.screen !== screenKey) {
     if (TAB_SCREENS.includes(screenKey)) state.stack = [];
@@ -1020,6 +1390,56 @@ function render(screenKey, params, push = true) {
 
 /* Delegated events */
 document.addEventListener("click", (e) => {
+  const sheetClose = e.target.closest("[data-sheet-close]");
+  if (sheetClose) { closeAccountSheet(); return; }
+  const openSheet = e.target.closest("[data-open-sheet]");
+  if (openSheet) { openAccountSheet(); return; }
+  const linkAcct = e.target.closest("[data-link-account]");
+  if (linkAcct) {
+    closeAccountSheet();
+    startLinkAccount();
+    return;
+  }
+  const acctRow = e.target.closest("[data-acct]");
+  if (acctRow) {
+    const acct = acctRow.dataset.acct;
+    if (acct && acct !== state.activeAcct) {
+      state.activeAcct = acct;
+      closeAccountSheet();
+      render(state.screen, null, false);
+      showToast(`Switched to ${acct}.`);
+    }
+    return;
+  }
+  const onbBtn = e.target.closest("[data-onb]");
+  if (onbBtn) {
+    const act = onbBtn.dataset.onb;
+    if (act === "start") {
+      state.setupContext = "onboarding";
+      state.onbStep = "form";
+      state.onbError = "";
+      render("setup", null, false);
+    } else if (act === "back") {
+      state.onbStep = "form";
+      state.onbError = "";
+      render("welcome", null, false);
+    } else if (act === "submit") {
+      e.preventDefault();
+      onbSubmit();
+    } else if (act === "finish") {
+      onbFinish();
+    }
+    return;
+  }
+  const onbMode = e.target.closest("[data-onbmode]");
+  if (onbMode) {
+    state.onbMode = onbMode.dataset.onbmode;
+    state.onbStep = "form";
+    state.onbError = "";
+    state.onbValues = {};
+    render("setup", null, false);
+    return;
+  }
   const accBtn = e.target.closest("[data-acc]");
   if (accBtn) {
     accBtn.parentElement.classList.toggle("open");
@@ -1072,8 +1492,136 @@ document.addEventListener("click", (e) => {
   if (toastBtn) showToast(toastBtn.dataset.toast);
 });
 
-function showToast(msg) {
-  const phone = document.getElementById("phone-screen");
+/* Link accounts sheet */
+function openAccountSheet() {
+  const sheet = document.querySelector(".acct-sheet");
+  if (!sheet) return;
+  sheet.hidden = false;
+  requestAnimationFrame(() => sheet.classList.add("open"));
+}
+
+function closeAccountSheet() {
+  const sheet = document.querySelector(".acct-sheet.open");
+  if (!sheet) return;
+  sheet.classList.remove("open");
+  setTimeout(() => { if (!sheet.classList.contains("open")) sheet.hidden = true; }, 280);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  closeAccountSheet();
+});
+
+/* Onboarding helpers */
+document.addEventListener("submit", (e) => {
+  if (e.target && e.target.id === "onb-form") {
+    e.preventDefault();
+    onbSubmit();
+  }
+});
+
+function setupFields(m) {
+  if (state.setupContext !== "manage") return m.fields;
+  return [...m.fields, { k: "nick", label: "Account label (optional)", ph: "e.g. Home, Sari-sari store", im: "text" }];
+}
+
+function onbValidate(values, mode) {
+  const digits = (s) => (s || "").replace(/\D/g, "");
+  if (mode === "open") {
+    if ((values.name || "").trim().length < 3) return "Enter the applicant's full name.";
+    if (!/^09\d{9}$/.test(digits(values.mobile))) return "Enter a valid mobile number (11 digits, starting with 09).";
+    if ((values.addr || "").trim().length < 6) return "Enter your complete service address.";
+    return "";
+  }
+  if (digits(values.acct).length < 6) return "Enter a valid account number from your water bill.";
+  if ((values.meter || "").trim().length < 3) return "Enter the meter number printed on your bill.";
+  return "";
+}
+
+function onbSubmit() {
+  const m = ONB_MODES[state.onbMode] || ONB_MODES.link;
+  const form = document.getElementById("onb-form");
+  if (!form) return;
+  const values = {};
+  setupFields(m).forEach((f) => {
+    const el = form.querySelector(`[name="${f.k}"]`);
+    values[f.k] = el ? el.value.trim() : "";
+  });
+  state.onbValues = values;
+  const err = onbValidate(values, state.onbMode);
+  if (err) {
+    state.onbError = err;
+    render("setup", null, false);
+    return;
+  }
+  if (state.setupContext === "manage") {
+    const key = (s) => String(s || "").replace(/\D/g, "");
+    if (state.accounts.some((a) => key(a.acct) === key(values.acct))) {
+      state.onbError = "This account is already linked to your profile.";
+      render("setup", null, false);
+      return;
+    }
+  }
+  state.onbError = "";
+  state.onbStep = "verify";
+  render("setup", null, false);
+
+  const token = ++state.onbToken;
+  setTimeout(() => {
+    if (token !== state.onbToken) return;
+    state.onbStep = "success";
+    render("setup", null, false);
+    setTimeout(() => {
+      if (state.setupContext !== "onboarding") return;
+      if (token !== state.onbToken || state.linked) return;
+      onbFinish();
+    }, 2800);
+  }, 1500);
+}
+
+function startLinkAccount() {
+  state.setupContext = "manage";
+  state.onbMode = "link";
+  state.onbStep = "form";
+  state.onbError = "";
+  state.onbValues = {};
+  render("setup");
+}
+
+function onbFinish() {
+  state.onbToken++;
+  state.onbStep = "form";
+  state.onbError = "";
+  if (state.setupContext === "manage") {
+    const v = state.onbValues || {};
+    const acct = (v.acct || "").trim();
+    const key = (s) => String(s || "").replace(/\D/g, "");
+    state.setupContext = "onboarding";
+    state.stack = [];
+    if (state.accounts.some((a) => key(a.acct) === key(acct))) {
+      render("account", null, false);
+      showToast("That account is already linked.");
+      return;
+    }
+    state.accounts.push({
+      acct,
+      label: (v.nick || "").trim() || `Account ${state.accounts.length + 1}`,
+      address: DATA.customer.address,
+      type: "Residential",
+      primary: false,
+    });
+    state.activeAcct = acct;
+    render("account", null, false);
+    showToast(`${acct} linked and set as active.`);
+    return;
+  }
+  state.linked = true;
+  state.stack = [];
+  render("home", null, false);
+  showToast(state.onbMode === "open" ? "Application received. We'll contact you soon." : "Welcome to PPCWD, Maria!");
+}
+
+function showToast(msg) {  const phone = document.getElementById("phone-screen");
   const old = phone.querySelector(".toast");
   if (old) old.remove();
   const t = document.createElement("div");
@@ -1091,21 +1639,23 @@ function showToast(msg) {
    Gallery mode (static all-screens overview)
    ============================================================ */
 const GALLERY = [
-  ["home", "1. Home Dashboard", "Balance card, quick actions, advisory & usage"],
-  ["bills", "2. Bills — Current", "Bill summary, breakdown, pay & download"],
-  ["bills-history", "3. Bills — History", "Searchable records with month filters"],
-  ["bill-detail", "4. Statement of Account", "Full statement details"],
-  ["payments", "5. Payments", "GCash primary + partner accordions"],
-  ["gcash-guide", "6. GCash Payment Guide", "Step-by-step instructions"],
-  ["payment-success", "7. Payment Confirmation", "Receipt & reference number"],
-  ["advisories", "8. Advisories", "Categories, featured card, list"],
-  ["advisory-detail", "9. Advisory Details", "Affected areas & full article"],
-  ["advisory-archive", "10. Advisory Archive", "Past advisories"],
-  ["usage", "11. Water Consumption", "Trends & month comparison"],
-  ["notifications", "12. Notifications", "Due dates, billing & advisories"],
-  ["account", "13. Account", "Customer info, linked accounts, settings"],
-  ["settings", "14. Settings & Preferences", "Notifications & accessibility"],
-  ["help", "15. Help & Support", "Call, email, FAQ accordions"],
+  ["welcome", "1. Welcome", "Brand intro & onboarding entry point"],
+  ["setup", "2. Account Setup", "Link, add, or open a water service account"],
+  ["home", "3. Home Dashboard", "Balance card, quick actions, advisory & usage"],
+  ["bills", "4. Bills — Current", "Bill summary, breakdown, pay & download"],
+  ["bills-history", "5. Bills — History", "Searchable records with month filters"],
+  ["bill-detail", "6. Statement of Account", "Full statement details"],
+  ["payments", "7. Payments", "GCash primary + partner accordions"],
+  ["gcash-guide", "8. GCash Payment Guide", "Step-by-step instructions"],
+  ["payment-success", "9. Payment Confirmation", "Manual mark as paid"],
+  ["advisories", "10. Advisories", "Categories, featured card, list"],
+  ["advisory-detail", "11. Advisory Details", "Affected areas & full article"],
+  ["advisory-archive", "12. Advisory Archive", "Past advisories"],
+  ["usage", "13. Water Consumption", "Trends & month comparison"],
+  ["notifications", "14. Notifications", "Due dates, billing & advisories"],
+  ["account", "15. Account", "Customer info, linked accounts, settings"],
+  ["settings", "16. Settings & Preferences", "Notifications & accessibility"],
+  ["help", "17. Help & Support", "Call, email, FAQ accordions"],
 ];
 
 function buildGallery() {
@@ -1116,6 +1666,17 @@ function buildGallery() {
       state.billsTab = "history";
       out = SCREENS.bills();
       state.billsTab = "current";
+    } else if (key === "setup") {
+      const saved = { mode: state.onbMode, step: state.onbStep, err: state.onbError, vals: state.onbValues };
+      state.onbMode = "link";
+      state.onbStep = "form";
+      state.onbError = "";
+      state.onbValues = {};
+      out = SCREENS.setup();
+      state.onbMode = saved.mode;
+      state.onbStep = saved.step;
+      state.onbError = saved.err;
+      state.onbValues = saved.vals;
     } else {
       out = SCREENS[key]();
     }
@@ -1127,6 +1688,8 @@ function buildGallery() {
         <div class="phone-screen">
           ${statusBar(false)}
           ${out.html}
+          ${out.tab ? tabbar(out.tab) : ""}
+          ${out.tab ? accountSheet() : ""}
           <div class="home-indicator"></div>
         </div>
       </div>
@@ -1147,5 +1710,5 @@ document.addEventListener("click", (e) => {
 });
 
 document.getElementById("phone-shell").innerHTML = `<div class="phone"><div class="notch"></div><div class="phone-screen" id="phone-screen"></div></div>`;
-render("home", null, false);
+render("welcome", null, false);
 buildGallery();
