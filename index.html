@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PPCWD Mobile App — Water Glassmorphism Redesign</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="page-header">
+    <div class="brand-lockup">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3s6.5 7 6.5 11a6.5 6.5 0 0 1-13 0C5.5 10 12 3 12 3Z"/>
+          <path d="M9.2 14.2a2.9 2.9 0 0 0 2.8 2.6"/>
+        </svg>
+      </div>
+      <div>
+        <h1>PPCWD Customer App &mdash; Water Glassmorphism Redesign</h1>
+        <p>Puerto Princesa City Water District &middot; Premium mobile utility experience</p>
+      </div>
+    </div>
+    <div class="view-toggle">
+      <button data-view="proto" class="active">Interactive prototype</button>
+      <button data-view="gallery">All 15 screens</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section id="proto-view" class="interactive-wrap">
+      <p class="stage-note">
+        Tap through the app &mdash; the <b>frosted bottom tabs</b>, glass cards, accordions and buttons are interactive.
+        Try <b>Payments &rarr; partner accordions</b> or <b>Bills &rarr; Billing History</b>.
+      </p>
+      <div id="phone-shell"></div>
+      <p class="footer-note">Prototype data is illustrative &middot; Customer: Maria Santos &middot; Account 0012-3456-7890</p>
+    </section>
+
+    <section id="gallery-view" hidden>
+      <p class="stage-note">Complete screen inventory &mdash; <b>15 high-fidelity screens</b> covering all core and minor features.</p>
+      <div id="gallery" class="gallery"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
