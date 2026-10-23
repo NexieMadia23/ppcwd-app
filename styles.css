@@ -513,7 +513,21 @@ body {
   box-shadow: 0 2px 8px rgba(25, 25, 112, 0.14); font-weight: 700;
 }
 
-.filter-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 0; }
+/* One-line filter rails: scroll horizontally with a fading edge as the cue,
+   and snap each chip to the start so a swipe lands on a whole label. */
+.filter-row {
+  display: flex; gap: 8px;
+  margin: -2px -20px; padding: 4px 28px 4px 20px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none; scroll-snap-type: x proximity;
+  scroll-padding-inline: 20px;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 34px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 34px), transparent 100%);
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-row .fchip { flex: none; scroll-snap-align: start; }
+.filter-row:focus-within { -webkit-mask-image: none; mask-image: none; }
 .fchip {
   border: 1.5px solid #E2E8F1; background: #fff;
   color: #566377; font-family: var(--font); font-size: 13px; font-weight: 600;
