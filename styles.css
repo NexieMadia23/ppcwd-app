@@ -190,18 +190,6 @@ body {
    ------------------------------------------------------------ */
 .app-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 16px; }
 .hello-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.account-btn {
-  flex: none; padding: 0; border: 0; border-radius: 50%;
-  background: none; cursor: pointer; line-height: 0;
-  transition: transform .12s ease;
-}
-.account-btn:active { transform: scale(.94); }
-.account-btn:focus-visible { outline: 2px solid var(--royal); outline-offset: 4px; }
-.account-btn .avatar { transition: box-shadow .18s ease, transform .18s ease; }
-.account-btn:hover .avatar {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(25, 25, 112, 0.12), 0 0 0 3px rgba(175, 238, 238, 1);
-}
 .hello small { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
 .hello h2 { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; color: #1F2937; margin-top: 3px; }
 .avatar {
@@ -380,7 +368,7 @@ body {
 /* ------------------------------------------------------------
    Quick actions — compact white tiles with a blue icon pill
    ------------------------------------------------------------ */
-.quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+.quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
 .qa {
   position: relative;
   background: #fff; border: 1px solid var(--glass-border); border-radius: var(--radius-md);

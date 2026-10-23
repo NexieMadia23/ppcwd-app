@@ -559,9 +559,6 @@ SCREENS.home = () => ({
     ${brandBar()}
     <div class="app-header">
       <div class="hello-row">
-        <button type="button" class="account-btn" data-tab="account" aria-label="Open account">
-          <span class="avatar" aria-hidden="true">${ICONS.user}</span>
-        </button>
         <div class="hello">
           <small lang="tl">Magandang araw,</small>
           <h2>${DATA.customer.name}</h2>
@@ -598,7 +595,6 @@ SCREENS.home = () => ({
       <div class="quick-actions">
         <button class="qa" data-nav="bills"><span class="qa-ic">${ICONS.bill}</span><span>My Bills</span></button>
         <button class="qa" data-nav="usage"><span class="qa-ic">${ICONS.drop}</span><span>My Usage</span></button>
-        <button class="qa" data-open-sheet><span class="qa-ic">${ICONS.user}</span><span>Accounts</span></button>
         <button class="qa" data-nav="help"><span class="qa-ic">${ICONS.help}</span><span>Get Help</span></button>
       </div>
 

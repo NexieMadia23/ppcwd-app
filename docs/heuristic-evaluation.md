@@ -46,7 +46,7 @@ Commit `f317b1f` addressed the step-list layout, the mobile frame fit, input pla
 
 | | High (3) | Medium (2) | Low (1) | Total |
 | --- | --- | --- | --- | --- |
-| Fixed in this pass | 11 | 20 | 7 | **38** |
+| Fixed in this pass | 11 | 20 | 8 | **39** |
 | Open | 0 | 4 | 2 | **6** |
 
 The fixed set is concentrated in four areas:
@@ -101,9 +101,10 @@ The open findings are structural: design-token drift, missing persistence, small
 | F32 | The current statement was labelled "Unpaid" while history called the same state "Due". | Chip copy differed for the same condition. | 1 | **Fixed** — both use **Due**. |
 | F33 | The page chrome hardcoded "All 17 screens" and "17 high-fidelity screens". | Counts in `index.html` and gallery copy. | 1 | **Fixed** — the counts are derived from the screen list at runtime, so the chrome cannot drift from the inventory. |
 | F35 | The Statement of Account offered **two download controls** for the same document — an unlabelled icon in the title bar and a labelled button beside Share — leaving the user to guess whether they differ. | `bill-detail` rendered a title-bar download icon and a second *Download* button in the action row, both firing the same toast. | 2 | **Fixed** — the title-bar icon is gone; one labelled **Download PDF** action remains beside Share, matching the wording on the Current Bill screen. |
-| F36 | The balance card carried a **"1 account" pill** — a count that reads as status but acts as a link, competing with the balance and duplicating account access that already exists. | The pill sat in the balance hero while the dashboard also had an *Accounts* tile and the Account tab a full accounts section. | 1 | **Fixed** — the pill and its styles were removed. The account number stays on the card to identify whose balance it is; switching and linking live in *Accounts* (dashboard tile) and the Account tab. |
+| F36 | The balance card carried a **"1 account" pill** — a count that reads as status but acts as a link, competing with the balance and duplicating account access that already exists. | The pill sat in the balance hero while the dashboard also had an *Accounts* tile and the Account tab a full accounts section. | 1 | **Fixed** — the pill and its styles were removed. The account number stays on the card to identify whose balance it is; switching and linking live in the Account tab (*Linked accounts*). |
 | F37 | **Two advisory categories were hidden**: the filter row was a horizontal scroller with no cue, so at phone width *Maintenance* was clipped mid-word and *Announcement* was off-screen entirely. | Measured at 392 px: four chips needed ~440 px but only 332 px were available. | 2 | **Fixed** — the filters are now a compact grid (two columns for advisories, three for billing history), so every option is visible at once and reachable with a mouse, keyboard or touch. No clipped labels, no hidden scroll. |
 | F38 | The Advisories screen had **two archive controls** — an icon in the title bar and an *Archive ›* link — both opening the same place. | Both carried `data-nav="advisory-archive"`. | 1 | **Fixed** — the title-bar icon is gone. The labelled *Archive ›* link remains in the *Recent advisories* header; when a filter has no further current items, the archive is offered as a *Browse past advisories* button, so there is always exactly one route. |
+| F39 | **Account access was repeated three times on Home**: the header avatar, the *Accounts* shortcut tile, and the *Account* tab. The tile also opened a different surface (a switcher sheet) than the other two, so near-identical entries behaved differently. | The avatar and the tab both opened the Account screen; the tile called `openAccountSheet()`. None was more than one tap from the dashboard. | 1 | **Fixed** — the avatar and the tile are gone. The header keeps the greeting and the notification bell, and the shortcut row is My Bills / My Usage / Get Help. The labelled Account tab is the single account entry point. |
 
 ### 3.5 Error prevention (H5)
 
@@ -161,7 +162,7 @@ These are real problems that were not fixed in this pass. They are documented so
 | O02 | **Preferences are not persisted.** The Settings footer says "Preferences are saved automatically", but toggles live in memory and reset on reload. | Needs a storage layer (localStorage) and a decision on defaults — appropriate for the next iteration, not a quick patch. | 2 |
 | O03 | **Type below 12 px.** Legal/footer copy and some micro-labels are 9.5–10.5 px. | The compact phone frame drives this; increasing them affects the whole layout. *Larger text* is the interim mitigation. | 2 |
 | O04 | **Fixed-pixel type scale / fixed frame height.** Browser and OS text-size settings are ignored; the 848 px frame requires page scrolling on short viewports. | A full `rem` conversion plus a fluid frame is a redesign task. The frame was deliberately kept at its design size to preserve the presentation. | 2 |
-| O05 | **Dead code paths.** `out.blueStatus` is never set, so the dark status-bar branch is unreachable; `--shadow-card` is unused. | Cosmetic/maintenance only. | 1 |
+| O05 | **Dead code paths.** `out.blueStatus` is never set, so the dark status-bar branch is unreachable; `--shadow-card` is unused; the linked-accounts sheet is now unreachable since the Home *Accounts* tile was removed. | Cosmetic/maintenance only. The sheet is kept as the component for a future multi-account switcher. | 1 |
 | O06 | **Single evaluator, no screen-reader run.** Findings are expert judgement, not a conformance audit or a usability test with real customers. | The next step is a moderated test (5–8 users) and an NVDA/VoiceOver pass on the real build. | — |
 
 ### Product-level recommendations
@@ -206,7 +207,8 @@ Checked in Chrome through the local static server (`python -m http.server 4173`)
 | Settings — High contrast | Computed muted text changes from `#5B6473` to `#2F3A4A`; setting persists while navigating. |
 | Settings — Larger text | Body/toggle text scales; persists while navigating. |
 | Sign out | Dialog opens with Cancel focused; Cancel returns focus; confirm returns to Welcome. |
-| Account sheet | Opens with focus inside, Tab stays inside, Escape/close returns focus to the trigger. |
+| Account access | The Account tab lists the linked account with its *Active* state and a *Link another account* action; no account controls remain on Home. |
+| Home shortcuts | Three tiles (*My Bills*, *My Usage*, *Get Help*); no account tile and no header avatar; the Account tab is the only account entry point. |
 | Keyboard paths | Tab order follows the visual order; no collapsed accordion content receives focus. |
 | 1440 × 900 | No horizontal overflow; card contents stay inside the frame after sheet interactions. |
 | 390 × 844 | Frame fits the viewport; no horizontal overflow; dialog and form errors stay within the frame. |
