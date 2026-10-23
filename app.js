@@ -386,8 +386,8 @@ const ONB_MODES = {
     icon: ICONS.link,
     blurb: "Already a PPCWD customer? Link using the account and meter numbers printed on your bill.",
     fields: [
-      { k: "acct", label: "Account number", ph: "0012-3456-7890", im: "numeric" },
-      { k: "meter", label: "Meter number", ph: "MTR-0098213", im: "text" },
+      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric" },
+      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text" },
     ],
   },
   add: {
@@ -395,8 +395,8 @@ const ONB_MODES = {
     icon: ICONS.plus,
     blurb: "Add another service connection using the account and meter numbers on your bill.",
     fields: [
-      { k: "acct", label: "Account number", ph: "0012-3456-7890", im: "numeric" },
-      { k: "meter", label: "Meter number", ph: "MTR-0098213", im: "text" },
+      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric" },
+      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text" },
       { k: "nick", label: "Account label (optional)", ph: "e.g. Home, Sari-sari store", im: "text" },
     ],
   },
@@ -405,9 +405,9 @@ const ONB_MODES = {
     icon: ICONS.drop,
     blurb: "Apply for a new water service connection for your property.",
     fields: [
-      { k: "name", label: "Full name", ph: "Maria Santos", im: "text" },
-      { k: "addr", label: "Service address", ph: "Brgy. Sta. Lucia, Puerto Princesa", im: "text" },
-      { k: "mobile", label: "Mobile number", ph: "0917 123 4567", im: "tel" },
+      { k: "name", label: "Full name", ph: "e.g. Maria Santos", im: "text" },
+      { k: "addr", label: "Service address", ph: "e.g. Brgy. Sta. Lucia, Puerto Princesa", im: "text" },
+      { k: "mobile", label: "Mobile number", ph: "e.g. 0917 123 4567", im: "tel" },
     ],
   },
 };
@@ -710,7 +710,7 @@ SCREENS["bill-detail"] = () => ({
           <div>
             <div class="text-muted" style="font-weight:700">Account name</div>
             <div style="font-weight:800;font-size:15.5px;margin-top:2px">${DATA.customer.name}</div>
-            <div class="text-muted mt-4" style="margin-top:4px">Acct no. ${activeAccount().acct}</div>
+            <div class="text-muted acct-id mt-4" style="margin-top:4px">Acct no. ${activeAccount().acct}</div>
           </div>
           <span class="chip chip-orange-light"><span class="cd"></span> Unpaid</span>
         </div>
@@ -1058,7 +1058,7 @@ SCREENS.account = () => ({
         <span class="avatar" style="width:56px;height:56px">${ICONS.user}</span>
         <div style="flex:1">
           <div style="font-weight:800;font-size:17px">${DATA.customer.name}</div>
-          <div class="text-muted" style="margin-top:2px">Acct no. ${activeAccount().acct}</div>
+          <div class="text-muted acct-id" style="margin-top:2px;font-size:12.5px">Acct no. ${activeAccount().acct}</div>
           <div class="mt-8"><span class="chip chip-green-light"><span class="cd"></span> Service Active</span> <span class="chip chip-blue-light"><span class="cd"></span> ${activeAccount().type || DATA.customer.type}</span></div>
         </div>
         <button class="icon-btn" data-toast="Editing personal information&hellip;">${ICONS.edit}</button>
@@ -1075,8 +1075,8 @@ SCREENS.account = () => ({
         <button class="list-row" data-acct="${esc(a.acct)}" aria-pressed="${active}">
           <span class="list-ic${active ? "" : " aqua"}">${ICONS.drop}</span>
           <span class="list-body">
-            <span class="t">${esc(a.acct)}${a.primary ? " &middot; Primary" : a.label ? ` &middot; ${esc(a.label)}` : ""}</span>
-            <span class="s">${esc(a.address || DATA.customer.address)}</span>
+            <span class="t acct-id">${esc(a.acct)}</span>
+            <span class="s">${a.primary ? "Primary" : a.label ? esc(a.label) : ""}${a.primary || a.label ? " &middot; " : ""}${esc(a.address || DATA.customer.address)}</span>
           </span>
           <span class="list-end">
             ${active ? `<span class="chip chip-green-light"><span class="cd"></span>Active</span>` : `<span class="chip chip-gray-light">Switch</span>`}

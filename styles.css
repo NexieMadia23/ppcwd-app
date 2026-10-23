@@ -79,6 +79,9 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* Keep [hidden] authoritative: display rules below (.interactive-wrap is
+   flex) would otherwise leave the hidden view on screen. */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -129,6 +132,9 @@ body {
 .gallery-item .caption h3 { font-size: 14.5px; font-weight: 800; color: #191970; }
 .gallery-item .caption p { font-size: 12.5px; color: #5d748c; margin-top: 2px; font-weight: 500; }
 .interactive-wrap { display: flex; flex-direction: column; align-items: center; }
+/* The shell is a shrink-to-fit flex item by default, which would let the
+   phone width follow its content. Pin it so the frame stays one fixed size. */
+#phone-shell { width: 100%; max-width: 392px; display: flex; justify-content: center; }
 
 /* ------------------------------------------------------------
    Phone frame
@@ -209,7 +215,7 @@ body {
 .avatar svg { width: 46%; height: 46%; }
 
 .icon-btn {
-  width: 46px; height: 46px; border-radius: 50%;
+  width: 46px; height: 46px; border-radius: 50%; flex: none;
   border: 1px solid var(--glass-border); background: var(--white);
   display: grid; place-items: center; cursor: pointer;
   position: relative; color: #1F2937; transition: transform .12s ease, background .15s;
@@ -645,16 +651,20 @@ body {
 /* Numbered steps */
 .steps { list-style: none; counter-reset: s; }
 .steps li {
-  display: flex; gap: 12px; padding: 10px 0; align-items: flex-start;
+  /* Block flow, not flex: the prose contains inline <b> runs, and flex
+     would turn each run into its own column. The number is positioned
+     in the 36px gutter instead. */
+  display: block; position: relative; padding: 10px 0 10px 36px;
   font-size: 13.5px; line-height: 1.6; color: #33415C; font-weight: 400;
 }
 .steps li b { color: var(--ink); font-weight: 700; }
 .steps li .n {
-  counter-increment: s; flex: none;
+  counter-increment: s;
+  position: absolute; left: 0; top: 9px;
   width: 24px; height: 24px; border-radius: 50%;
   background: #E6F7F7; border: 1px solid #BFE7E7;
   color: #15706F; font-size: 12px; font-weight: 800;
-  display: grid; place-items: center; margin-top: 2px;
+  display: grid; place-items: center;
 }
 .steps li .n::before { content: counter(s); }
 /* On dark surfaces the steps flip to light ink */
@@ -1008,6 +1018,8 @@ body {
 .mt-8 { margin-top: 8px; } .mt-4 { margin-top: 4px; } .mt-10 { margin-top: 10px; } .mt-12 { margin-top: 12px; }
 .mt-14 { margin-top: 14px; } .mt-16 { margin-top: 16px; } .mt-18 { margin-top: 18px; } .mt-20 { margin-top: 20px; }
 .text-muted { color: var(--muted); font-size: 13px; line-height: 1.55; font-weight: 400; }
+/* Account identifiers must never break mid-number */
+.acct-id { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .divider { height: 1px; background: var(--line); margin: 4px 0; }
 .verified-banner {
   display: flex; align-items: center; gap: 11px;
@@ -1281,4 +1293,8 @@ body {
   .stage { padding: 16px 8px 60px; }
   .gallery { grid-template-columns: 1fr; }
   .gallery-item { width: 100%; max-width: 392px; }
+  /* Fit the frame to the width of the device it is viewed on. The height
+     stays at the design's 848px so the screens keep their intended
+     vertical rhythm instead of reflowing into a shorter frame. */
+  .phone { width: 100%; max-width: 392px; height: 848px; }
 }
