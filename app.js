@@ -759,7 +759,7 @@ function billsHistory() {
 SCREENS["bill-detail"] = () => ({
   html: `
   <div class="screen on-tint">
-    ${backHeader("Statement of Account", `<button class="icon-btn" data-toast="Statement downloaded to your device." aria-label="Download statement">${ICONS.download}</button>`)}
+    ${backHeader("Statement of Account")}
     <div class="pad after-bar">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -786,7 +786,7 @@ SCREENS["bill-detail"] = () => ({
       </div>
 
       <div class="mt-14" style="display:flex;gap:10px">
-        <button class="btn btn-outline btn-sm" style="flex:1" data-toast="Statement downloaded to your device.">${ICONS.download} Download</button>
+        <button class="btn btn-outline btn-sm" style="flex:1" data-toast="Statement downloaded to your device.">${ICONS.download} Download PDF</button>
         <button class="btn btn-outline btn-sm" style="flex:1" data-toast="Share sheet opened.">${ICONS.share} Share</button>
       </div>
       <button class="btn btn-primary btn-block mt-12" data-nav="gcash-guide">${ICONS.pay} Pay this bill</button>

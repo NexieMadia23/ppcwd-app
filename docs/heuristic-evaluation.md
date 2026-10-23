@@ -46,7 +46,7 @@ Commit `f317b1f` addressed the step-list layout, the mobile frame fit, input pla
 
 | | High (3) | Medium (2) | Low (1) | Total |
 | --- | --- | --- | --- | --- |
-| Fixed in this pass | 11 | 18 | 5 | **34** |
+| Fixed in this pass | 11 | 19 | 5 | **35** |
 | Open | 0 | 4 | 2 | **6** |
 
 The fixed set is concentrated in four areas:
@@ -100,6 +100,7 @@ The open findings are structural: design-token drift, missing persistence, small
 | F31 | The flow mixed languages: the confirmation was in Tagalog while the rest of the app is English. | Success copy "Naitala ang bayad…" against English UI. | 2 | **Fixed** — success screen rewritten in English with the same tone as the rest of the flow. |
 | F32 | The current statement was labelled "Unpaid" while history called the same state "Due". | Chip copy differed for the same condition. | 1 | **Fixed** — both use **Due**. |
 | F33 | The page chrome hardcoded "All 17 screens" and "17 high-fidelity screens". | Counts in `index.html` and gallery copy. | 1 | **Fixed** — the counts are derived from the screen list at runtime, so the chrome cannot drift from the inventory. |
+| F35 | The Statement of Account offered **two download controls** for the same document — an unlabelled icon in the title bar and a labelled button beside Share — leaving the user to guess whether they differ. | `bill-detail` rendered a title-bar download icon and a second *Download* button in the action row, both firing the same toast. | 2 | **Fixed** — the title-bar icon is gone; one labelled **Download PDF** action remains beside Share, matching the wording on the Current Bill screen. |
 
 ### 3.5 Error prevention (H5)
 
@@ -136,7 +137,7 @@ F12 also serves recognition: one payment summary replaces two copies of the same
 | --- | --- | --- | --- | --- |
 | F21 | Tertiary text failed contrast: `--muted-2` `#8B94A3` on white is **3.06:1**. | Used for hints, placeholders, timestamps, icons. | 3 | **Fixed** — `#66707F` = **5.0:1** on white; contrast is also strengthened by the High contrast switch. |
 | F22 | Most controls had no visible keyboard focus indicator. | Only the tab bar and account controls had `:focus-visible`. | 3 | **Fixed** — one consistent 2 px ring for buttons, links, rows, chips, inputs, switches and headings, with a yellow ring on dark surfaces. |
-| F23 | Icon-only buttons had no accessible name. | Back, bell, download, share, edit, archive, link-account, close. | 3 | **Fixed** — `aria-label` on each, plus a live unread count on the bell. |
+| F23 | Icon-only buttons had no accessible name. | Back, bell, share, edit, archive, link-account, close. | 3 | **Fixed** — `aria-label` on each, plus a live unread count on the bell. |
 | F24 | Screen changes in the single-page prototype were silent to screen readers. | No live region; focus stayed on the clicked tab. | 3 | **Fixed** — a persistent `role="status"` live region announces the new screen and focus moves to its heading. |
 | F25 | Toast confirmations were visual only. | `showToast` inserted no live region. | 2 | **Fixed** — messages go through the persistent live region; the visual toast is `aria-hidden` so it is not announced twice. |
 | F26 | The featured advisory and archive rows were clickable `div`s — mouse-only. | No role, no tabindex, no key handling on the featured card. | 3 | **Fixed** — converted to real `<button>` elements with the title/excerpt as spans; Enter/Space work and the focus ring is visible. |
