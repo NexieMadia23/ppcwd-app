@@ -1250,7 +1250,7 @@ SCREENS.settings = () => {
 SCREENS.notifications = () => ({
   html: `
   <div class="screen on-tint">
-    ${backHeader("Notifications", state.unread ? `<button class="icon-btn" data-readall aria-label="Mark all as read">${ICONS.check}</button>` : "")}
+    ${backHeader("Notifications", state.unread ? `<button class="titlebar-action" data-readall>Mark all read</button>` : "")}
     <div class="pad after-bar">
       <div class="section-head" style="margin-top:6px"><h3>Today</h3></div>
       <div class="row-card">

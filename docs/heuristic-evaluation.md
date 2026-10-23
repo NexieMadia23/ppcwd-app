@@ -67,7 +67,7 @@ The open findings are structural: design-token drift, missing persistence, small
 | ID | Finding (before) | Evidence | Sev | Status |
 | --- | --- | --- | --- | --- |
 | F01 | The due-date pill used a hardcoded string, so it claimed a fixed interval regardless of the actual date. | Home shipped `Due in 18 days` as static copy in `app.js`. | 2 | **Fixed** — due date now comes from `DATA.bill.dueISO` against a demo "today" (`2026-10-23`); label switches between *Due today*, *Due tomorrow*, *Due in N days* and *Past due*, and the notification copy uses the same helper. |
-| F02 | The notification badge was a bare number that never cleared; the bell had no accessible name. | `state.unread` was not read by the bell; no way to mark notifications read. | 2 | **Fixed** — badge is driven by `state.unread`, the bell announces "Notifications, N unread", and a *Mark all as read* action clears both badge and unread styling. |
+| F02 | The notification badge was a bare number that never cleared; the bell had no accessible name. | `state.unread` was not read by the bell; no way to mark notifications read. | 2 | **Fixed** — badge is driven by `state.unread`, the bell announces "Notifications, N unread", and a labelled **Mark all read** action clears both badge and unread styling. (The first version used an icon-only check mark, which sighted users cannot interpret; it is now a text action.) |
 | F03 | The payment confirmation showed a tick and a sentence but no transaction facts, so the user could not verify what had been reported. | Success screen had no reference, period, or status. | 3 | **Fixed** — shows amount, billing period, GCash reference (`GC-…`), an *Awaiting verification* status chip, and guidance to keep the reference until it appears in history. |
 
 ### 3.2 Match between system and the real world (H2)
@@ -195,7 +195,7 @@ Checked in Chrome through the local static server (`python -m http.server 4173`)
 | Billing history search ("sept") | 1 result, count updated, caret preserved. |
 | Billing history filter (2025) | Empty state with *Clear filters*; clearing restores the list and the count. |
 | Advisory archive search ("water") | One real result; no phantom row; opening it shows matching content. |
-| Mark all as read | Badge disappears from Home; bell label drops the count. |
+| Mark all read | Badge disappears from Home; bell label drops the count. |
 | Settings — High contrast | Computed muted text changes from `#5B6473` to `#2F3A4A`; setting persists while navigating. |
 | Settings — Larger text | Body/toggle text scales; persists while navigating. |
 | Sign out | Dialog opens with Cancel focused; Cancel returns focus; confirm returns to Welcome. |
