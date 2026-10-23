@@ -513,8 +513,7 @@ body {
   box-shadow: 0 2px 8px rgba(25, 25, 112, 0.14); font-weight: 700;
 }
 
-.filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; }
-.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 2px 0; }
 .fchip {
   border: 1.5px solid #E2E8F1; background: #fff;
   color: #566377; font-family: var(--font); font-size: 13px; font-weight: 600;

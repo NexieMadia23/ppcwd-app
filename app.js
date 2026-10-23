@@ -723,7 +723,7 @@ function billsHistory() {
     ${ICONS.search}
     <input id="bill-search" type="search" data-search="historyQuery" aria-label="Search bills by month or reference number" placeholder="Search by month or reference no." value="${esc(state.historyQuery)}" />
   </div>
-  <div class="filter-scroll mt-12">
+  <div class="filter-row mt-12">
     ${filters.map((f) => `<button class="fchip ${state.historyFilter === f ? "active" : ""}" data-hfilter="${f}" aria-pressed="${state.historyFilter === f}">${f === "All" ? "All months" : f}</button>`).join("")}
   </div>
   ${rows.length ? `
@@ -1002,11 +1002,10 @@ SCREENS.advisories = () => {
     <div class="screen">
       <div class="page-titlebar">
         <h2>Advisories</h2>
-        <button class="icon-btn" data-nav="advisory-archive" aria-label="Archive">${ICONS.archive}</button>
       </div>
       <div class="pad">
-        <div class="filter-scroll">
-          ${cats.map((c) => `<button class="fchip ${state.advFilter === c ? "active" : ""}" data-advc="${c}">${c === "All" ? "All advisories" : c}</button>`).join("")}
+        <div class="filter-row">
+          ${cats.map((c) => `<button class="fchip ${state.advFilter === c ? "active" : ""}" data-advc="${c}" aria-pressed="${state.advFilter === c}">${c === "All" ? "All advisories" : c}</button>`).join("")}
         </div>
 
         ${featured ? `
@@ -1028,7 +1027,8 @@ SCREENS.advisories = () => {
               </span>
               <span class="list-end">${ICONS.chevR}</span>
             </button>`).join("")}
-        </div>` : ""}
+        </div>` : `
+        <button class="btn btn-soft btn-block mt-14" data-nav="advisory-archive">Browse past advisories ${ICONS.chevR}</button>`}
 
         <p class="footer-note">Advisories are posted by PPCWD Information Office</p>
       </div>

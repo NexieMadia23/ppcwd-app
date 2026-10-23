@@ -46,7 +46,7 @@ Commit `f317b1f` addressed the step-list layout, the mobile frame fit, input pla
 
 | | High (3) | Medium (2) | Low (1) | Total |
 | --- | --- | --- | --- | --- |
-| Fixed in this pass | 11 | 19 | 6 | **36** |
+| Fixed in this pass | 11 | 20 | 7 | **38** |
 | Open | 0 | 4 | 2 | **6** |
 
 The fixed set is concentrated in four areas:
@@ -102,6 +102,8 @@ The open findings are structural: design-token drift, missing persistence, small
 | F33 | The page chrome hardcoded "All 17 screens" and "17 high-fidelity screens". | Counts in `index.html` and gallery copy. | 1 | **Fixed** — the counts are derived from the screen list at runtime, so the chrome cannot drift from the inventory. |
 | F35 | The Statement of Account offered **two download controls** for the same document — an unlabelled icon in the title bar and a labelled button beside Share — leaving the user to guess whether they differ. | `bill-detail` rendered a title-bar download icon and a second *Download* button in the action row, both firing the same toast. | 2 | **Fixed** — the title-bar icon is gone; one labelled **Download PDF** action remains beside Share, matching the wording on the Current Bill screen. |
 | F36 | The balance card carried a **"1 account" pill** — a count that reads as status but acts as a link, competing with the balance and duplicating account access that already exists. | The pill sat in the balance hero while the dashboard also had an *Accounts* tile and the Account tab a full accounts section. | 1 | **Fixed** — the pill and its styles were removed. The account number stays on the card to identify whose balance it is; switching and linking live in *Accounts* (dashboard tile) and the Account tab. |
+| F37 | **Two advisory categories were hidden**: the filter row was a horizontal scroller with no cue, so at phone width *Maintenance* was clipped mid-word and *Announcement* was off-screen entirely. | Measured at 392 px: four chips needed ~440 px but only 332 px were available. | 2 | **Fixed** — the filter row wraps onto a second line and every category is visible. The billing-history filters use the same wrapping row, so no filter is hidden on either screen. |
+| F38 | The Advisories screen had **two archive controls** — an icon in the title bar and an *Archive ›* link — both opening the same place. | Both carried `data-nav="advisory-archive"`. | 1 | **Fixed** — the title-bar icon is gone. The labelled *Archive ›* link remains in the *Recent advisories* header; when a filter has no further current items, the archive is offered as a *Browse past advisories* button, so there is always exactly one route. |
 
 ### 3.5 Error prevention (H5)
 
@@ -124,7 +126,7 @@ F12 also serves recognition: one payment summary replaces two copies of the same
 
 | ID | Finding (before) | Evidence | Sev | Status |
 | --- | --- | --- | --- | --- |
-| F19 | No live filtering, no bulk action, no quick reset; every refinement was a full round trip that did not actually work. | Search inputs were inert; notifications required reading each item. | 2 | **Fixed** — search filters as you type (caret and scroll preserved), *Clear filters* resets both query and chips, *Mark all as read* clears the badge. |
+| F19 | No live filtering, no bulk action, no quick reset; every refinement was a full round trip that did not actually work. | Search inputs were inert; notifications required reading each item. | 2 | **Fixed** — search filters as you type (caret and scroll preserved), *Clear filters* resets both query and chips, *Mark all read* clears the badge. |
 
 ### 3.8 Error recovery (H9)
 
@@ -138,7 +140,7 @@ F12 also serves recognition: one payment summary replaces two copies of the same
 | --- | --- | --- | --- | --- |
 | F21 | Tertiary text failed contrast: `--muted-2` `#8B94A3` on white is **3.06:1**. | Used for hints, placeholders, timestamps, icons. | 3 | **Fixed** — `#66707F` = **5.0:1** on white; contrast is also strengthened by the High contrast switch. |
 | F22 | Most controls had no visible keyboard focus indicator. | Only the tab bar and account controls had `:focus-visible`. | 3 | **Fixed** — one consistent 2 px ring for buttons, links, rows, chips, inputs, switches and headings, with a yellow ring on dark surfaces. |
-| F23 | Icon-only buttons had no accessible name. | Back, bell, share, edit, archive, link-account, close. | 3 | **Fixed** — `aria-label` on each, plus a live unread count on the bell. |
+| F23 | Icon-only buttons had no accessible name. | Back, bell, share, edit, link-account, close. | 3 | **Fixed** — `aria-label` on each, plus a live unread count on the bell. |
 | F24 | Screen changes in the single-page prototype were silent to screen readers. | No live region; focus stayed on the clicked tab. | 3 | **Fixed** — a persistent `role="status"` live region announces the new screen and focus moves to its heading. |
 | F25 | Toast confirmations were visual only. | `showToast` inserted no live region. | 2 | **Fixed** — messages go through the persistent live region; the visual toast is `aria-hidden` so it is not announced twice. |
 | F26 | The featured advisory and archive rows were clickable `div`s — mouse-only. | No role, no tabindex, no key handling on the featured card. | 3 | **Fixed** — converted to real `<button>` elements with the title/excerpt as spans; Enter/Space work and the focus ring is visible. |
@@ -197,6 +199,8 @@ Checked in Chrome through the local static server (`python -m http.server 4173`)
 | Billing history search ("sept") | 1 result, count updated, caret preserved. |
 | Billing history filter (2025) | Empty state with *Clear filters*; clearing restores the list and the count. |
 | Advisory archive search ("water") | One real result; no phantom row; opening it shows matching content. |
+| Advisory filters | All four categories visible on two rows; each filter updates the list; *Maintenance* shows its advisory and a *Browse past advisories* button. |
+| Archive routes | Only one archive control is present; it opens the three archived advisories. |
 | Mark all read | Badge disappears from Home; bell label drops the count. |
 | Settings — High contrast | Computed muted text changes from `#5B6473` to `#2F3A4A`; setting persists while navigating. |
 | Settings — Larger text | Body/toggle text scales; persists while navigating. |
