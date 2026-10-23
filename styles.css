@@ -25,7 +25,7 @@
   --ink: #1F2937;          /* Dark text */
   --ink-2: #374151;
   --muted: #5B6473;        /* Secondary text — AA contrast on white */
-  --muted-2: #8B94A3;      /* Tertiary — icons, chevrons */
+  --muted-2: #66707F;      /* Tertiary — icons, chevrons, placeholders (≥4.5:1) */
 
   /* Semantic accents */
   --green: #22C55E;
@@ -149,7 +149,7 @@ body {
 .phone-screen {
   width: 100%; height: 100%;
   background: #F8FAFC;
-  border-radius: 43px; overflow: hidden; position: relative;
+  border-radius: 43px; overflow: clip; position: relative;
   display: flex; flex-direction: column; color: var(--ink);
 }
 /* Soft water ambient wash — very low opacity, no clutter */
@@ -287,7 +287,7 @@ body {
    Balance hero card — midnight-to-royal brand moment
    ------------------------------------------------------------ */
 .balance-card {
-  position: relative; overflow: hidden;
+  position: relative; overflow: clip;
   border-radius: var(--radius-xl);
   background:
     linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)),
@@ -705,8 +705,8 @@ body {
   color: #1F2937; padding: 6px 11px; border-radius: 999px;
   text-transform: uppercase; letter-spacing: .7px;
 }
-.adv-feature h4 { font-size: 17px; font-weight: 700; margin-top: 12px; line-height: 1.35; letter-spacing: -.3px; }
-.adv-feature p { font-size: 13px; color: rgba(255, 255, 255, 0.85); margin-top: 7px; line-height: 1.55; font-weight: 400; }
+.adv-feature .adv-title { display: block; font-size: 17px; font-weight: 700; margin-top: 12px; line-height: 1.35; letter-spacing: -.3px; }
+.adv-feature .adv-excerpt { display: block; font-size: 13px; color: rgba(255, 255, 255, 0.85); margin-top: 7px; line-height: 1.55; font-weight: 400; }
 .adv-feature .meta { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.75); margin-top: 12px; }
 .adv-feature .meta svg { width: 14px; height: 14px; }
 
@@ -826,8 +826,8 @@ body {
 .notif { display: flex; gap: 13px; padding: 16px 16px; align-items: flex-start; background: transparent; color: var(--ink); }
 .notif + .notif { border-top: 1px solid var(--line); }
 .notif.unread { background: #F0F6FF; }
-.notif .t { font-size: 14px; font-weight: 600; line-height: 1.45; }
-.notif .s { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.5; font-weight: 400; }
+.notif .t { display: block; font-size: 14px; font-weight: 600; line-height: 1.45; }
+.notif .s { display: block; font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.5; font-weight: 400; }
 .notif .time { font-size: 11.5px; color: var(--muted-2); font-weight: 600; margin-top: 7px; display: block; }
 .notif-dark { color: #fff; }
 .notif-dark + .notif-dark { border-top-color: rgba(255, 255, 255, 0.1); }
@@ -841,9 +841,9 @@ body {
    ------------------------------------------------------------ */
 .toggle-row { display: flex; align-items: center; gap: 14px; padding: 16px 16px; background: transparent; color: var(--ink); }
 .toggle-row + .toggle-row { border-top: 1px solid var(--line); }
-.toggle-row .tr-body { flex: 1; }
-.toggle-row .tr-body .t { font-size: 14.5px; font-weight: 600; }
-.toggle-row .tr-body .s { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; font-weight: 400; }
+.toggle-row .tr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.toggle-row .tr-body .t { display: block; font-size: 14.5px; font-weight: 600; }
+.toggle-row .tr-body .s { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; font-weight: 400; }
 .toggle-row-dark { color: #fff; }
 .toggle-row-dark + .toggle-row-dark { border-top-color: rgba(255, 255, 255, 0.1); }
 .toggle-row-dark .tr-body .s { color: rgba(255, 255, 255, 0.78); }
@@ -1287,6 +1287,128 @@ body {
 .card-dark .onb-summary div { border-bottom-color: rgba(255, 255, 255, 0.12); }
 .card-dark .onb-summary span:first-child { color: rgba(255, 255, 255, 0.78); }
 .card-dark .onb-summary span:last-child { color: #fff; }
+
+/* ------------------------------------------------------------
+   Audit pass: accessibility, feedback, and honest affordances
+   ------------------------------------------------------------ */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* One consistent focus ring for every interactive control */
+.btn:focus-visible, .qa:focus-visible, .list-row:focus-visible, .fchip:focus-visible,
+.seg button:focus-visible, .icon-btn:focus-visible, .acc-head:focus-visible,
+.adv-feature:focus-visible, .adv-item:focus-visible, .section-head .link:focus-visible,
+.switch:focus-visible, .sheet-row:focus-visible, .back-btn:focus-visible,
+.dialog-panel .btn:focus-visible {
+  outline: 2px solid var(--royal);
+  outline-offset: 2px;
+}
+.balance-card .btn:focus-visible, .adv-feature:focus-visible { outline-color: var(--yellow); }
+.screen:focus { outline: none; }
+.screen h2:focus, .screen h3:focus { outline: none; }
+
+/* The whole switch is hittable, not just its 32px track */
+.switch { position: relative; }
+.switch::before { content: ""; position: absolute; inset: -8px -6px; border-radius: 999px; }
+/* Small text links get a 44px-tall invisible hit area */
+.section-head .link { position: relative; }
+.section-head .link::after { content: ""; position: absolute; inset: -12px -8px; }
+.acct-pill { position: relative; }
+.acct-pill::after { content: ""; position: absolute; inset: -8px -6px; border-radius: 999px; }
+.fchip { min-height: 34px; display: inline-flex; align-items: center; }
+
+/* Inline field errors, placed next to the field that needs fixing */
+.onb-field.has-error input { border-color: #E11D48; background: #FFF7F8; }
+.onb-field.has-error > span:first-child { color: #B91C1C; }
+.onb-field > .onb-field-err {
+  display: flex; align-items: flex-start; gap: 6px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none;
+  color: #B91C1C; margin: 6px 0 0; line-height: 1.45;
+}
+.onb-field-err svg { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+.onb-field > .onb-hint {
+  display: block; font-size: 11.5px; font-weight: 500; letter-spacing: 0; text-transform: none;
+  color: var(--muted); margin: 5px 0 0; line-height: 1.45;
+}
+.card-dark .onb-field > .onb-hint { color: rgba(255, 255, 255, 0.66); }
+.card-dark .onb-field > .onb-field-err { color: #FECACA; }
+
+/* Empty results for the searchable lists */
+.empty-state { text-align: center; padding: 26px 20px; display: grid; justify-items: center; gap: 8px; }
+.empty-state > svg { width: 30px; height: 30px; color: var(--muted-2); }
+.empty-state p { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* Sign-out confirmation */
+.dialog-sheet { position: absolute; inset: 0; z-index: 20; opacity: 0; transition: opacity .18s ease; }
+.dialog-sheet.open { opacity: 1; }
+.dialog-scrim {
+  position: absolute; inset: 0; border: 0; padding: 0; cursor: pointer;
+  background: rgba(10, 15, 50, 0.46);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.dialog-panel {
+  position: absolute; left: 18px; right: 18px; top: 50%; transform: translateY(-50%);
+  background: #fff; border-radius: 22px; padding: 24px 22px 20px;
+  box-shadow: 0 24px 60px rgba(13, 20, 70, 0.35);
+  text-align: center;
+}
+.dialog-icon {
+  width: 46px; height: 46px; border-radius: 50%; margin: 0 auto 12px;
+  display: grid; place-items: center;
+  background: #FDECEC; color: #B91C1C; border: 1px solid #F7D5D5;
+}
+.dialog-icon svg { width: 22px; height: 22px; }
+.dialog-panel h3 { font-size: 17px; font-weight: 800; color: var(--ink); }
+.dialog-panel p { font-size: 13px; line-height: 1.55; color: var(--muted); margin-top: 7px; }
+.dialog-actions { display: flex; gap: 10px; margin-top: 20px; }
+.dialog-actions .btn { flex: 1; }
+.btn-danger { background: #DC2626; color: #fff; box-shadow: 0 8px 18px rgba(220, 38, 38, 0.28); }
+.btn-danger:active { transform: translateY(1px); }
+
+/* Accessibility preferences exposed in Settings */
+.phone-screen.hc { --muted: #2F3A4A; --muted-2: #47536A; --line: #C4CEDA; }
+.phone-screen.hc .list-body .s,
+.phone-screen.hc .text-muted,
+.phone-screen.hc .footer-note,
+.phone-screen.hc .chart .col .mlbl,
+.phone-screen.hc .utbl th,
+.phone-screen.hc .kv .k,
+.phone-screen.hc .onb-hint,
+.phone-screen.hc .search-field input::placeholder { color: #2F3A4A; }
+.phone-screen.hc .card,
+.phone-screen.hc .row-card,
+.phone-screen.hc .search-field,
+.phone-screen.hc .icon-btn { border-color: #AEBACB; }
+
+.phone-screen.lt .list-body .t,
+.phone-screen.lt .tr-body .t,
+.phone-screen.lt .notif .t { font-size: 15.5px; }
+.phone-screen.lt .list-body .s,
+.phone-screen.lt .tr-body .s,
+.phone-screen.lt .notif .s { font-size: 13.5px; }
+.phone-screen.lt .text-muted,
+.phone-screen.lt .steps li,
+.phone-screen.lt .onb-status p { font-size: 15px; }
+.phone-screen.lt .btn { font-size: 15px; }
+.phone-screen.lt .kv { font-size: 13.5px; }
+.phone-screen.lt .footer-note { font-size: 12.5px; }
+.phone-screen.lt .chip { font-size: 12px; }
+.phone-screen.lt .section-head h3 { font-size: 16px; }
+.phone-screen.lt .utbl th { font-size: 11px; }
+.phone-screen.lt .utbl td { font-size: 13.5px; }
+.phone-screen.lt .onb-field > .onb-hint,
+.phone-screen.lt .onb-field > .onb-field-err { font-size: 12.5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .acct-sheet .sheet-panel,
+  .sheet-scrim,
+  .dialog-sheet,
+  .toast { transition: none !important; }
+  .onb-spin { animation: none; border-top-color: var(--royal); }
+  html { scroll-behavior: auto; }
+}
 
 @media (max-width: 480px) {
   .page-header { padding: 20px 12px 6px; }

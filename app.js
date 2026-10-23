@@ -89,9 +89,13 @@ const logo = (key, alt = "", onDark = false, style = "", fallback = "") => {
 /* ---------------- Data ---------------- */
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const DATA = {
+  /* The prototype is pinned to a fixed "today" so relative copy
+     (days until due, reminders) stays truthful over time. */
+  today: "2026-10-23",
+  paymentRef: "GC-7741-1023-8890",
   customer: { name: "Maria Santos", first: "Maria", initials: "MS", acct: "0012-3456-7890", meter: "MTR-0098213", address: "Brgy. Sta. Lucia, Puerto Princesa City", type: "Residential" },
   bill: {
-    amount: "1,247.50", due: "November 10, 2026", dueShort: "Nov 10, 2026",
+    amount: "1,247.50", due: "November 10, 2026", dueShort: "Nov 10, 2026", dueISO: "2026-11-10",
     period: "October 2026", prev: "51 – 100 cu.m", usage: "10 cu.m",
     ref: "PPCWD-2026-10-7890",
     lines: [
@@ -167,8 +171,30 @@ const DATA = {
       areas: ["Sicsican"],
       body: "Sediment flushing of distribution lines in Sicsican was conducted in three phases to maintain water clarity and quality. Customers experienced brief discoloration during flushing hours only.",
     },
+    {
+      id: "a7", cat: "Announcement", color: "sky",
+      title: "Water quality report: 3rd quarter results",
+      date: "August 30, 2025", archive: true,
+      excerpt: "All tested samples met the Philippine National Standards for Drinking Water.",
+      areas: [],
+      body: "PPCWD's 3rd quarter water quality monitoring covers 42 sampling points across the service area. All physico-chemical and bacteriological tests passed the Philippine National Standards for Drinking Water (PNSDW).\n\nThe full laboratory report is available at the PPCWD Customer Service Office during business hours.",
+    },
   ],
 };
+
+/* Relative due-date copy comes from one place so every screen agrees. */
+const DAY_MS = 86400000;
+function daysUntilDue() {
+  const due = Date.parse(`${DATA.bill.dueISO}T00:00:00`);
+  const today = Date.parse(`${DATA.today}T00:00:00`);
+  return Math.round((due - today) / DAY_MS);
+}
+function dueLabel() {
+  const d = daysUntilDue();
+  if (d < 0) return `Overdue by ${Math.abs(d)} day${Math.abs(d) === 1 ? "" : "s"}`;
+  if (d === 0) return "Due today";
+  return `Due in ${d} day${d === 1 ? "" : "s"}`;
+}
 
 const HELP_FAQ = [
   { q: "How is my water bill computed?", a: "Your bill combines your water consumption (in cubic meters, based on your meter reading), a monthly service charge, and an environmental charge. Rates per cubic meter follow the tiered domestic rate schedule approved by the Local Water Utilities Administration (LWUA)." },
@@ -185,14 +211,20 @@ const state = {
   billsTab: "current",
   advFilter: "All",
   historyFilter: "All",
+  historyQuery: "",
+  advQuery: "",
+  unread: 2,
   /* Onboarding */
   linked: false,
   onbMode: "link",
   onbStep: "form",
   onbError: "",
+  onbErrField: "",
   onbValues: {},
   onbToken: 0,
   setupContext: "onboarding",
+  /* Settings — reflected in the UI so the screen tells the truth */
+  switches: { due: true, bill: true, adv: true, pay: true, contrast: false, bigtext: false },
 };
 
 const TAB_SCREENS = ["home", "bills", "payments", "advisories", "account"];
@@ -334,7 +366,7 @@ const brandBar = () => "";
 
 const backHeader = (title, action = "") => `
   <div class="page-titlebar">
-    <button class="back-btn" data-back>${ICONS.chevL}</button>
+    <button class="back-btn" data-back aria-label="Go back">${ICONS.chevL}</button>
     <h2>${title}</h2>
     ${action}
   </div>`;
@@ -386,8 +418,8 @@ const ONB_MODES = {
     icon: ICONS.link,
     blurb: "Already a PPCWD customer? Link using the account and meter numbers printed on your bill.",
     fields: [
-      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric" },
-      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text" },
+      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric", hint: "Digits and dashes, as printed at the top of your bill." },
+      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text", hint: "Printed next to the account number on your bill." },
     ],
   },
   add: {
@@ -395,8 +427,8 @@ const ONB_MODES = {
     icon: ICONS.plus,
     blurb: "Add another service connection using the account and meter numbers on your bill.",
     fields: [
-      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric" },
-      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text" },
+      { k: "acct", label: "Account number", ph: "e.g. 0012-3456-7890", im: "numeric", hint: "Digits and dashes, as printed at the top of your bill." },
+      { k: "meter", label: "Meter number", ph: "e.g. MTR-0098213", im: "text", hint: "Printed next to the account number on your bill." },
       { k: "nick", label: "Account label (optional)", ph: "e.g. Home, Sari-sari store", im: "text" },
     ],
   },
@@ -406,8 +438,8 @@ const ONB_MODES = {
     blurb: "Apply for a new water service connection for your property.",
     fields: [
       { k: "name", label: "Full name", ph: "e.g. Maria Santos", im: "text" },
-      { k: "addr", label: "Service address", ph: "e.g. Brgy. Sta. Lucia, Puerto Princesa", im: "text" },
-      { k: "mobile", label: "Mobile number", ph: "e.g. 0917 123 4567", im: "tel" },
+      { k: "addr", label: "Service address", ph: "e.g. Brgy. Sta. Lucia, Puerto Princesa", im: "text", hint: "Include the barangay and street so our crew can find the property." },
+      { k: "mobile", label: "Mobile number", ph: "e.g. 0917 123 4567", im: "tel", hint: "We use this only for billing and service alerts." },
     ],
   },
 };
@@ -421,12 +453,20 @@ SCREENS.setup = () => {
   const form = `
     <p class="onb-mode-blurb">${m.blurb}</p>
     <form id="onb-form" novalidate>
-      ${setupFields(m).map((f) => `
-        <label class="onb-field">
-          <span>${f.label}</span>
-          <input type="text" inputmode="${f.im}" name="${f.k}" placeholder="${f.ph}" value="${esc(v[f.k] || "")}" autocomplete="off" spellcheck="false" />
-        </label>`).join("")}
-      ${state.onbError ? `<div class="onb-error">${ICONS.alert}<span>${state.onbError}</span></div>` : ""}
+      ${setupFields(m).map((f) => {
+        const bad = state.onbError && state.onbErrField === f.k;
+        const desc = bad ? `err-${f.k}` : f.hint ? `hint-${f.k}` : "";
+        return `
+        <label class="onb-field${bad ? " has-error" : ""}" for="onb-${f.k}">
+          <span id="lbl-${f.k}">${f.label}</span>
+          <input id="onb-${f.k}" aria-labelledby="lbl-${f.k}" type="text" inputmode="${f.im}" name="${f.k}" placeholder="${f.ph}" value="${esc(v[f.k] || "")}" autocomplete="off" spellcheck="false" maxlength="40"${desc ? ` aria-describedby="${desc}"` : ""}${bad ? ' aria-invalid="true"' : ""} />
+          ${bad
+            ? `<span class="onb-field-err" id="err-${f.k}">${ICONS.alert}<span>${state.onbError}</span></span>`
+            : f.hint
+              ? `<span class="onb-hint" id="hint-${f.k}">${f.hint}</span>`
+              : ""}
+        </label>`;
+      }).join("")}
       <button class="btn btn-primary btn-block mt-14" type="submit" data-onb="submit">
         ${state.onbMode === "open" ? "Submit application" : "Verify &amp; link account"}
       </button>
@@ -523,12 +563,12 @@ SCREENS.home = () => ({
           <span class="avatar" aria-hidden="true">${ICONS.user}</span>
         </button>
         <div class="hello">
-          <small>Magandang araw,</small>
+          <small lang="tl">Magandang araw,</small>
           <h2>${DATA.customer.name}</h2>
         </div>
       </div>
-      <button class="icon-btn" data-nav="notifications" aria-label="Notifications, 3 unread">
-        ${ICONS.bell}<span class="badge">3</span>
+      <button class="icon-btn" data-nav="notifications" aria-label="Notifications${state.unread ? `, ${state.unread} unread` : ""}">
+        ${ICONS.bell}${state.unread ? `<span class="badge">${state.unread}</span>` : ""}
       </button>
     </div>
 
@@ -545,7 +585,7 @@ SCREENS.home = () => ({
           </button>
         </div>
         <div class="balance-meta">
-          <span class="pill pill-countdown">${ICONS.clock.replace("<svg", '<svg style="width:13px;height:13px"')} Due in 20 days</span>
+          <span class="pill pill-countdown">${ICONS.clock.replace("<svg", '<svg style="width:13px;height:13px"')} ${dueLabel()}</span>
           <span class="pill pill-glass">${ICONS.calendar.replace("<svg", '<svg style="width:13px;height:13px"')} ${DATA.bill.dueShort}</span>
         </div>
         <div class="balance-foot">
@@ -621,7 +661,7 @@ SCREENS.bills = () => ({
   <div class="screen">
     <div class="page-titlebar">
       <h2>My Bills</h2>
-      <button class="icon-btn" data-nav="notifications">${ICONS.bell}</button>
+      <button class="icon-btn" data-nav="notifications" aria-label="Notifications${state.unread ? `, ${state.unread} unread` : ""}">${ICONS.bell}${state.unread ? `<span class="badge">${state.unread}</span>` : ""}</button>
     </div>
     <div class="pad">
       <div class="seg">
@@ -655,7 +695,7 @@ function billsCurrent() {
     </div>
     <div class="stat">
       <div class="sl">${ICONS.receipt} Reference no.</div>
-      <div class="sv" style="font-size:14px;margin-top:9px">2026-10-7890</div>
+      <div class="sv" style="font-size:11.5px;margin-top:11px;letter-spacing:-.2px">${DATA.bill.ref}</div>
     </div>
   </div>
 
@@ -670,17 +710,28 @@ function billsCurrent() {
 
 function billsHistory() {
   const filters = ["All", "2026", "2025", "Paid", "Unpaid"];
+  const q = (state.historyQuery || "").trim().toLowerCase();
+  const rows = DATA.history.filter((h) => {
+    const f = state.historyFilter;
+    const byFilter =
+      f === "All" ||
+      f === h.period.slice(-4) ||
+      (f === "Paid" && h.status === "Paid") ||
+      (f === "Unpaid" && h.status !== "Paid");
+    const byQuery = !q || `${h.period} ${h.amt} ${h.status} ${h.date}`.toLowerCase().includes(q);
+    return byFilter && byQuery;
+  });
   return `
   <div class="mt-14 search-field">
     ${ICONS.search}
-    <input type="text" placeholder="Search by month or reference no." />
+    <input id="bill-search" type="search" data-search="historyQuery" aria-label="Search bills by month or reference number" placeholder="Search by month or reference no." value="${esc(state.historyQuery)}" />
   </div>
   <div class="filter-scroll mt-12">
-    ${filters.map((f) => `<button class="fchip ${state.historyFilter === f ? "active" : ""}" data-hfilter="${f}">${f === "All" ? "All months" : f}</button>`).join("")}
-    <button class="fchip">${ICONS.calendar.replace("<svg", '<svg style="width:14px;height:14px;vertical-align:-2px;margin-right:4px"')} Pick date</button>
+    ${filters.map((f) => `<button class="fchip ${state.historyFilter === f ? "active" : ""}" data-hfilter="${f}" aria-pressed="${state.historyFilter === f}">${f === "All" ? "All months" : f}</button>`).join("")}
   </div>
+  ${rows.length ? `
   <div class="row-card mt-14">
-    ${DATA.history.map((h) => `
+    ${rows.map((h) => `
       <button class="list-row" data-nav="bill-detail">
         <span class="list-ic">${ICONS.receipt}</span>
         <span class="list-body">
@@ -695,15 +746,20 @@ function billsHistory() {
           ${ICONS.chevR}
         </span>
       </button>`).join("")}
-  </div>
-  <p class="footer-note">Showing 6 of 24 billing records</p>`;
+  </div>` : `
+  <div class="card mt-14 empty-state">
+    ${ICONS.search}
+    <p>No bills match this filter.</p>
+    <button class="btn btn-soft btn-sm" data-clear-bills>Clear filters</button>
+  </div>`}
+  <p class="footer-note">Showing ${rows.length} of 24 billing records</p>`;
 }
 
 /* ---------- BILL DETAIL (Statement of Account) ---------- */
 SCREENS["bill-detail"] = () => ({
   html: `
   <div class="screen on-tint">
-    ${backHeader("Statement of Account", `<button class="icon-btn" data-toast="Statement downloaded to your device.">${ICONS.download}</button>`)}
+    ${backHeader("Statement of Account", `<button class="icon-btn" data-toast="Statement downloaded to your device." aria-label="Download statement">${ICONS.download}</button>`)}
     <div class="pad after-bar">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -712,7 +768,7 @@ SCREENS["bill-detail"] = () => ({
             <div style="font-weight:800;font-size:15.5px;margin-top:2px">${DATA.customer.name}</div>
             <div class="text-muted acct-id mt-4" style="margin-top:4px">Acct no. ${activeAccount().acct}</div>
           </div>
-          <span class="chip chip-orange-light"><span class="cd"></span> Unpaid</span>
+          <span class="chip chip-orange-light"><span class="cd"></span> Due</span>
         </div>
         <div class="bill-divider"></div>
         <div class="kv"><span class="k">Billing period</span><span class="v">${DATA.bill.period}</span></div>
@@ -760,19 +816,12 @@ SCREENS.payments = () => ({
         </div>
       </section>
 
-      <div class="section-head"><h3>How to pay with GCash</h3></div>
+      <div class="section-head"><h3>What you'll need</h3></div>
       <div class="card">
-        <ol class="steps">
-          <li><span class="n"></span> Open your GCash app and log in.</li>
-          <li><span class="n"></span> Tap <b>Pay Bills</b>, then choose <b>Water Utility</b>.</li>
-          <li><span class="n"></span> Select <b>PPCWD</b> as the biller.</li>
-          <li><span class="n"></span> Enter your account number <b>${activeAccount().acct}</b> and the amount due.</li>
-          <li><span class="n"></span> Confirm, then keep the GCash reference number for your records.</li>
-        </ol>
-        <div class="need-box">
-          <div class="nb-t">${ICONS.info} You will need</div>
+        <div class="need-box" style="margin-top:0">
           <p>Account number (${activeAccount().acct}) &middot; Account name (${DATA.customer.name}) &middot; Amount due (&#8369;${DATA.bill.amount})</p>
         </div>
+        <div class="mt-12"><span class="chip chip-blue-light"><span class="cd"></span> GCash posts within minutes</span></div>
       </div>
 
       <!-- Other partners -->
@@ -780,7 +829,7 @@ SCREENS.payments = () => ({
       <p class="text-muted" style="margin-bottom:12px">Pay over the counter at any partner near you. Tap a partner to see the steps.</p>
 
       <div class="acc">
-        <button class="acc-head" data-acc>
+        <button class="acc-head" data-acc aria-expanded="false">
           ${logo("palawan", "Palawan Pawnshop", false, "", `<span class="acc-logo l-palawan">Palawan</span>`)}
           <span class="acc-body-t"><span class="t">Palawan Pawnshop</span><span class="s">Over-the-counter &middot; posts within 24 hrs</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
@@ -798,7 +847,7 @@ SCREENS.payments = () => ({
       </div>
 
       <div class="acc">
-        <button class="acc-head" data-acc>
+        <button class="acc-head" data-acc aria-expanded="false">
           ${logo("ecpay", "ECPay", false, "", `<span class="acc-logo l-ecpay">ECPay</span>`)}
           <span class="acc-body-t"><span class="t">ECPay</span><span class="s">Partner stores and remittance centers</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
@@ -816,9 +865,9 @@ SCREENS.payments = () => ({
       </div>
 
       <div class="acc">
-        <button class="acc-head" data-acc>
+        <button class="acc-head" data-acc aria-expanded="false">
           ${logo("sm", "SM Bills Payment", false, "", `<span class="acc-logo l-sm">SM</span>`)}
-          <span class="acc-body-t"><span class="t">SM Bills Pay</span><span class="s">Any SM Business Center or cashier</span></span>
+          <span class="acc-body-t"><span class="t">SM Bills Payment</span><span class="s">Any SM Business Center or cashier</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
         <div class="acc-panel"><div class="acc-panel-inner">
@@ -834,17 +883,17 @@ SCREENS.payments = () => ({
       </div>
 
       <div class="acc">
-        <button class="acc-head" data-acc>
+        <button class="acc-head" data-acc aria-expanded="false">
           ${logo("ml", "M Lhuillier", false, "", `<span class="acc-logo l-ml">ML</span>`)}
-          <span class="acc-body-t"><span class="t">MLhuillier</span><span class="s">Kwarta Padala branches nationwide</span></span>
+          <span class="acc-body-t"><span class="t">M Lhuillier</span><span class="s">Kwarta Padala branches nationwide</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
         </button>
         <div class="acc-panel"><div class="acc-panel-inner">
           <ol class="steps">
-            <li><span class="n"></span> Go to any MLhuillier branch.</li>
+            <li><span class="n"></span> Go to any M Lhuillier branch.</li>
             <li><span class="n"></span> Fill out the <b>Bills Payment</b> form and write PPCWD as the biller.</li>
             <li><span class="n"></span> Provide your account number and pay the amount due in cash.</li>
-            <li><span class="n"></span> Verify the details printed on your ML receipt before leaving.</li>
+            <li><span class="n"></span> Verify the details printed on your M Lhuillier receipt before leaving.</li>
           </ol>
           <div class="need-box"><div class="nb-t">${ICONS.info} Required information</div>
             <p>Account name &middot; Account number &middot; Amount due &middot; Contact number</p></div>
@@ -852,7 +901,7 @@ SCREENS.payments = () => ({
       </div>
 
       <div class="acc">
-        <button class="acc-head" data-acc>
+        <button class="acc-head" data-acc aria-expanded="false">
           ${logo("ussc", "USSC", false, "", `<span class="acc-logo l-ussc">USSC</span>`)}
           <span class="acc-body-t"><span class="t">USSC</span><span class="s">Universal Stores and Services</span></span>
           <span class="acc-chev">${ICONS.chevD}</span>
@@ -873,7 +922,7 @@ SCREENS.payments = () => ({
         ${ICONS.shield}
         <p>PPCWD never asks for your GCash PIN or OTP. Keep your receipts until your payment reflects in the app.</p>
       </div>
-      <p class="footer-note">Payments posted within 24 hours &middot; Office hours 8:00 AM &ndash; 5:00 PM</p>
+      <p class="footer-note">GCash posts within minutes &middot; Partner payments within 24 hours &middot; Office hours 8:00 AM &ndash; 5:00 PM</p>
     </div>
     <div class="after-tabs" style="height:16px"></div>
   </div>`,
@@ -912,7 +961,7 @@ SCREENS["gcash-guide"] = () => ({
         <p>GCash payments post to your PPCWD account within minutes. Your balance in the app updates automatically.</p>
       </div>
 
-      <button class="btn btn-primary btn-block mt-16" data-nav="payment-success">${ICONS.send} I have paid &mdash; mark as paid</button>
+      <button class="btn btn-primary btn-block mt-16" data-nav="payment-success">${ICONS.send} I've paid &mdash; confirm my payment</button>
       <button class="btn btn-outline btn-block mt-10" data-toast="Opening GCash app&hellip;">${ICONS.globe} Open GCash app</button>
     </div>
   </div>`,
@@ -924,12 +973,19 @@ SCREENS["payment-success"] = () => ({
   <div class="screen">
     <div class="success-wrap after-bar">
       <div class="success-ring">${ICONS.check}</div>
-      <h2 style="font-size:22px;font-weight:800">Payment submitted</h2>
-      <p class="text-muted mt-8" style="max-width:280px">Ipinasa na ang pagmamarka bilang bayad. I-verify pa rin ng PPCWD ang bayad mo sa GCash bago ito mag-reflect sa account.</p>
+      <h2 style="font-size:22px;font-weight:800">Payment reported</h2>
+      <p class="text-muted mt-8" style="max-width:290px">We're checking your GCash payment now. Your balance and official receipt update automatically, usually within 15 minutes.</p>
 
       <div class="card mt-20" style="width:100%;text-align:left">
         <div class="kv"><span class="k">Amount</span><span class="v">&#8369;${DATA.bill.amount}</span></div>
         <div class="kv"><span class="k">Billing period</span><span class="v">${DATA.bill.period}</span></div>
+        <div class="kv"><span class="k">GCash reference</span><span class="v" style="font-size:12px">${DATA.paymentRef}</span></div>
+        <div class="kv"><span class="k">Status</span><span class="v"><span class="chip chip-orange-light"><span class="cd"></span> Awaiting verification</span></span></div>
+      </div>
+
+      <div class="verified-banner mt-14" style="text-align:left">
+        ${ICONS.info}
+        <p>Keep this reference number until the payment appears in your billing history.</p>
       </div>
 
       <button class="btn btn-primary btn-block mt-12" data-tab="home">Back to Home</button>
@@ -957,13 +1013,12 @@ SCREENS.advisories = () => {
         </div>
 
         ${featured ? `
-        <div class="mt-14 adv-feature" data-nav="advisory-detail" data-id="${featured.id}">
+        <button type="button" class="mt-14 adv-feature" data-nav="advisory-detail" data-id="${featured.id}">
           <span class="cat">${ICONS.alert.replace("<svg", '<svg style="width:13px;height:13px"')} ${featured.cat}</span>
-          <h4>${featured.title}</h4>
-          <p>${featured.excerpt}</p>
-          <div class="meta">${ICONS.calendar.replace("<svg", '<svg style="width:14px;height:14px"')} ${featured.date}</div>
-        </div>` : `<div class="mt-14 card text-muted" style="text-align:center">No advisories in this category.</div>`}
-
+          <span class="adv-title">${featured.title}</span>
+          <span class="adv-excerpt">${featured.excerpt}</span>
+          <span class="meta">${ICONS.calendar.replace("<svg", '<svg style="width:14px;height:14px"')} ${featured.date}</span>
+        </button>` : `<div class="mt-14 card text-muted" style="text-align:center">No advisories in this category.</div>`}
         ${rest.length ? `
         <div class="section-head"><h3>Recent advisories</h3><button class="link" data-nav="advisory-archive">Archive ${ICONS.chevR}</button></div>
         <div class="row-card">
@@ -986,15 +1041,18 @@ SCREENS.advisories = () => {
   };
 };
 
-SCREENS["advisory-archive"] = () => ({
-  html: `
+SCREENS["advisory-archive"] = () => {
+  const q = (state.advQuery || "").trim().toLowerCase();
+  const rows = DATA.advisories.filter((a) => a.archive && (!q || `${a.title} ${a.date}`.toLowerCase().includes(q)));
+  return {
+    html: `
   <div class="screen on-tint">
     ${backHeader("Advisory Archive")}
     <div class="pad after-bar">
-      <div class="search-field">${ICONS.search}<input placeholder="Search past advisories" /></div>
+      <div class="search-field">${ICONS.search}<input type="search" data-search="advQuery" aria-label="Search past advisories" placeholder="Search past advisories" value="${esc(state.advQuery)}" /></div>
       <div class="section-head"><h3>2025 &amp; earlier</h3></div>
       <div class="row-card">
-        ${DATA.advisories.filter((a) => a.archive).map((a) => `
+        ${rows.map((a) => `
           <button class="adv-item" data-nav="advisory-detail" data-id="${a.id}">
             <span class="adv-bar ${a.color === "sky" ? "" : a.color}"></span>
             <span style="flex:1">
@@ -1003,23 +1061,20 @@ SCREENS["advisory-archive"] = () => ({
             </span>
             <span class="list-end">${ICONS.chevR}</span>
           </button>`).join("")}
-        <button class="adv-item" data-nav="advisory-detail" data-id="a6">
-          <span class="adv-bar green"></span>
-          <span style="flex:1"><span class="t">Water quality report: 3rd quarter results</span><span class="s">August 30, 2025 &middot; Archived</span></span>
-          <span class="list-end">${ICONS.chevR}</span>
-        </button>
       </div>
+      ${rows.length ? "" : `<div class="card mt-14 empty-state">${ICONS.search}<p>No archived advisories match your search.</p></div>`}
       <p class="footer-note">Advisories older than 2 years are available upon request</p>
     </div>
   </div>`,
-});
+  };
+};
 
 SCREENS["advisory-detail"] = (params) => {
   const a = DATA.advisories.find((x) => x.id === (params && params.id)) || DATA.advisories[0];
   return {
     html: `
     <div class="screen on-tint">
-      ${backHeader("Advisory", `<button class="icon-btn" data-toast="Advisory shared.">${ICONS.share}</button>`)}
+      ${backHeader("Advisory", `<button class="icon-btn" data-toast="Advisory shared." aria-label="Share advisory">${ICONS.share}</button>`)}
       <div class="pad after-bar">
         <div class="card">
           <span class="chip chip-${a.color === "sky" ? "blue" : a.color === "aqua" ? "aqua" : "orange"}-light"><span class="cd"></span>${a.cat}</span>
@@ -1061,7 +1116,7 @@ SCREENS.account = () => ({
           <div class="text-muted acct-id" style="margin-top:2px;font-size:12.5px">Acct no. ${activeAccount().acct}</div>
           <div class="mt-8"><span class="chip chip-green-light"><span class="cd"></span> Service Active</span> <span class="chip chip-blue-light"><span class="cd"></span> ${activeAccount().type || DATA.customer.type}</span></div>
         </div>
-        <button class="icon-btn" data-toast="Editing personal information&hellip;">${ICONS.edit}</button>
+        <button class="icon-btn" data-toast="Editing personal information&hellip;" aria-label="Edit personal information">${ICONS.edit}</button>
       </div>
 
       <div class="section-head">
@@ -1117,7 +1172,7 @@ SCREENS.account = () => ({
           <span class="list-body"><span class="t">About this app</span><span class="s">Version 2.0 &middot; Puerto Princesa City Water District</span></span>
           <span class="list-end">${ICONS.chevR}</span>
         </button>
-        <button class="list-row" data-toast="You have been signed out.">
+        <button class="list-row" data-signout>
           <span class="list-ic red">${ICONS.logout}</span>
           <span class="list-body"><span class="t danger-text">Sign out</span></span>
         </button>
@@ -1129,8 +1184,13 @@ SCREENS.account = () => ({
 });
 
 /* ---------- SETTINGS ---------- */
-SCREENS.settings = () => ({
-  html: `
+SCREENS.settings = () => {
+  const sw = (key, label) => {
+    const on = !!state.switches[key];
+    return `<button class="switch ${on ? "on" : ""}" type="button" data-switch="${key}" role="switch" aria-checked="${on}" aria-label="${label}"></button>`;
+  };
+  return {
+    html: `
   <div class="screen on-tint">
     ${backHeader("Settings")}
     <div class="pad after-bar">
@@ -1139,22 +1199,22 @@ SCREENS.settings = () => ({
         <div class="toggle-row">
           <span class="list-ic orange">${ICONS.calendar}</span>
           <span class="tr-body"><span class="t">Due date reminders</span><span class="s">Alert 3 days before your bill is due</span></span>
-          <button class="switch on" data-switch></button>
+          ${sw("due", "Due date reminders")}
         </div>
         <div class="toggle-row">
           <span class="list-ic">${ICONS.bill}</span>
           <span class="tr-body"><span class="t">Billing alerts</span><span class="s">Notify me when a new bill is issued</span></span>
-          <button class="switch on" data-switch></button>
+          ${sw("bill", "Billing alerts")}
         </div>
         <div class="toggle-row">
           <span class="list-ic aqua">${ICONS.advisory}</span>
           <span class="tr-body"><span class="t">Advisory notifications</span><span class="s">Service interruptions and announcements</span></span>
-          <button class="switch on" data-switch></button>
+          ${sw("adv", "Advisory notifications")}
         </div>
         <div class="toggle-row">
           <span class="list-ic green">${ICONS.checkC}</span>
           <span class="tr-body"><span class="t">Payment confirmations</span><span class="s">Receipt alerts when payments post</span></span>
-          <button class="switch on" data-switch></button>
+          ${sw("pay", "Payment confirmations")}
         </div>
       </div>
 
@@ -1162,13 +1222,13 @@ SCREENS.settings = () => ({
       <div class="row-card">
         <div class="toggle-row">
           <span class="list-ic sky">${ICONS.text}</span>
-          <span class="tr-body"><span class="t">Larger text</span><span class="s">Increase text size across the app</span></span>
-          <button class="switch" data-switch></button>
+          <span class="tr-body"><span class="t">Larger text</span><span class="s">Increase body text size across the app</span></span>
+          ${sw("bigtext", "Larger text")}
         </div>
         <div class="toggle-row">
           <span class="list-ic">${ICONS.spark}</span>
           <span class="tr-body"><span class="t">High contrast</span><span class="s">Stronger colors for better readability</span></span>
-          <button class="switch" data-switch></button>
+          ${sw("contrast", "High contrast")}
         </div>
       </div>
 
@@ -1183,25 +1243,26 @@ SCREENS.settings = () => ({
       <p class="footer-note">Preferences are saved automatically</p>
     </div>
   </div>`,
-});
+  };
+};
 
 /* ---------- NOTIFICATIONS ---------- */
 SCREENS.notifications = () => ({
   html: `
   <div class="screen on-tint">
-    ${backHeader("Notifications", `<button class="icon-btn" data-toast="All notifications marked as read.">${ICONS.check}</button>`)}
+    ${backHeader("Notifications", state.unread ? `<button class="icon-btn" data-readall aria-label="Mark all as read">${ICONS.check}</button>` : "")}
     <div class="pad after-bar">
       <div class="section-head" style="margin-top:6px"><h3>Today</h3></div>
       <div class="row-card">
-        <div class="notif unread">
+        <div class="notif${state.unread ? " unread" : ""}">
           <span class="list-ic orange" style="width:38px;height:38px;border-radius:11px">${ICONS.calendar}</span>
-          <span style="flex:1"><span class="t">Your October bill is due in 20 days</span><span class="s">Pay &#8369;${DATA.bill.amount} on or before ${DATA.bill.dueShort} to avoid late charges.</span><span class="time">9:00 AM</span></span>
-          <span class="unread-dot"></span>
+          <span style="flex:1"><span class="t">Your October bill is ${dueLabel().toLowerCase()}</span><span class="s">Pay &#8369;${DATA.bill.amount} on or before ${DATA.bill.dueShort} to avoid late charges.</span><span class="time">9:00 AM</span></span>
+          ${state.unread ? `<span class="unread-dot"></span>` : ""}
         </div>
-        <div class="notif unread">
+        <div class="notif${state.unread ? " unread" : ""}">
           <span class="list-ic aqua" style="width:38px;height:38px;border-radius:11px">${ICONS.alert}</span>
           <span style="flex:1"><span class="t">Water interruption tomorrow in Sta. Lucia</span><span class="s">Service off from 9:00 AM to 3:00 PM for main line repairs.</span><span class="time">8:15 AM</span></span>
-          <span class="unread-dot"></span>
+          ${state.unread ? `<span class="unread-dot"></span>` : ""}
         </div>
       </div>
       <div class="section-head"><h3>Earlier</h3></div>
@@ -1242,7 +1303,7 @@ SCREENS.usage = () => {
           <div style="font-size:40px;font-weight:800;letter-spacing:-1.2px;margin-top:4px">10 <span style="font-size:16px;opacity:.85">cu.m</span></div>
           <div class="mt-10"><span class="pill pill-glass"><span class="pdot" style="background:var(--aqua)"></span> ${Math.abs(diff).toFixed(0)}% less than last month</span></div>
           <div class="balance-meta" style="margin-top:12px">
-            <span class="acct-no">Meter read: Oct 15, 2026 &middot; Previous: 4,203 cu.m</span>
+            <span class="acct-no">Meter read: Oct 15, 2026 &middot; Previous: 4,204 cu.m</span>
           </div>
         </div>
 
@@ -1350,7 +1411,7 @@ SCREENS.help = () => ({
       <div class="section-head"><h3>Frequently asked questions</h3></div>
       ${HELP_FAQ.map((f) => `
         <div class="acc">
-          <button class="acc-head" data-acc style="padding:16px">
+          <button class="acc-head" data-acc aria-expanded="false" style="padding:16px">
             <span class="acc-body-t"><span class="t" style="font-size:14px">${f.q}</span></span>
             <span class="acc-chev">${ICONS.chevD}</span>
           </button>
@@ -1373,19 +1434,42 @@ function render(screenKey, params, push = true) {
   if (!state.linked && screenKey === "setup" && state.setupContext === "manage") state.setupContext = "onboarding";
   const def = SCREENS[screenKey];
   if (!def) return;
+  const changed = state.screen !== screenKey;
   const out = def(params);
   const phone = document.getElementById("phone-screen");
+  const prevScroll = (phone.querySelector(".screen") || {}).scrollTop || 0;
   const bar = out.tab ? tabbar(out.tab) : "";
   const sheet = out.tab ? accountSheet() : "";
   phone.innerHTML = `${statusBar(!!out.blueStatus)}<div id="screen-mount" class="${bar ? "has-bar" : ""}" style="flex:1;display:flex;flex-direction:column;min-height:0">${out.html}</div>${bar}${sheet}<div class="home-indicator"></div>`;
 
-  if (push && state.screen !== screenKey) {
+  if (push && changed) {
     if (TAB_SCREENS.includes(screenKey)) state.stack = [];
     else state.stack.push(state.screen);
   }
   state.screen = screenKey;
+
+  /* Re-renders used for filtering keep their scroll position; a real
+     screen change starts at the top. */
   const sc = phone.querySelector(".screen");
-  if (sc) sc.scrollTop = 0;
+  if (sc) sc.scrollTop = changed ? 0 : prevScroll;
+
+  /* Collapsed accordion panels stay in the layout for the height
+     animation, so keep them out of the tab order and the a11y tree. */
+  phone.querySelectorAll(".acc").forEach((acc) => {
+    const panel = acc.querySelector(".acc-panel");
+    if (panel) panel.inert = !acc.classList.contains("open");
+  });
+
+  /* Tell assistive tech which screen just opened, and move keyboard
+     focus to its title so the next Tab starts inside the screen. */
+  const title = phone.querySelector(".success-wrap h2, .onb-head h3, .page-titlebar h2, .screen h2, .screen h1");
+  const live = document.getElementById("app-live");
+  const tabNames = { home: "Home", bills: "My Bills", payments: "Payments", advisories: "Advisories", account: "Account" };
+  if (live && changed) live.textContent = out.tab ? tabNames[out.tab] : title ? title.textContent.trim() : "";
+  if (changed && title) {
+    title.setAttribute("tabindex", "-1");
+    title.focus({ preventScroll: true });
+  }
 }
 
 /* Delegated events */
@@ -1396,7 +1480,7 @@ document.addEventListener("click", (e) => {
   if (openSheet) { openAccountSheet(); return; }
   const linkAcct = e.target.closest("[data-link-account]");
   if (linkAcct) {
-    closeAccountSheet();
+    closeAccountSheet(false);
     startLinkAccount();
     return;
   }
@@ -1405,8 +1489,13 @@ document.addEventListener("click", (e) => {
     const acct = acctRow.dataset.acct;
     if (acct && acct !== state.activeAcct) {
       state.activeAcct = acct;
-      closeAccountSheet();
+      closeAccountSheet(false);
       render(state.screen, null, false);
+      const h = document.querySelector("#phone-screen .screen h2");
+      if (h) {
+        h.setAttribute("tabindex", "-1");
+        h.focus({ preventScroll: true });
+      }
       showToast(`Switched to ${acct}.`);
     }
     return;
@@ -1418,10 +1507,12 @@ document.addEventListener("click", (e) => {
       state.setupContext = "onboarding";
       state.onbStep = "form";
       state.onbError = "";
+      state.onbErrField = "";
       render("setup", null, false);
     } else if (act === "back") {
       state.onbStep = "form";
       state.onbError = "";
+      state.onbErrField = "";
       render("welcome", null, false);
     } else if (act === "submit") {
       e.preventDefault();
@@ -1436,18 +1527,31 @@ document.addEventListener("click", (e) => {
     state.onbMode = onbMode.dataset.onbmode;
     state.onbStep = "form";
     state.onbError = "";
+    state.onbErrField = "";
     state.onbValues = {};
     render("setup", null, false);
     return;
   }
   const accBtn = e.target.closest("[data-acc]");
   if (accBtn) {
-    accBtn.parentElement.classList.toggle("open");
+    const open = accBtn.parentElement.classList.toggle("open");
+    accBtn.setAttribute("aria-expanded", String(open));
+    const panel = accBtn.parentElement.querySelector(".acc-panel");
+    if (panel) panel.inert = !open;
     return;
   }
   const sw = e.target.closest("[data-switch]");
   if (sw) {
-    sw.classList.toggle("on");
+    const key = sw.dataset.switch;
+    const on = !sw.classList.contains("on");
+    sw.classList.toggle("on", on);
+    sw.setAttribute("aria-checked", String(on));
+    if (key in state.switches) state.switches[key] = on;
+    if (key === "contrast" || key === "bigtext") {
+      const phone = document.getElementById("phone-screen");
+      if (phone) phone.classList.toggle(key === "contrast" ? "hc" : "lt", on);
+      showToast(`${sw.getAttribute("aria-label")} ${on ? "on" : "off"}.`);
+    }
     return;
   }
   const tabBtn = e.target.closest("[data-tab]");
@@ -1483,9 +1587,33 @@ document.addEventListener("click", (e) => {
   const hFilter = e.target.closest("[data-hfilter]");
   if (hFilter) {
     state.historyFilter = hFilter.dataset.hfilter;
-    render("bills", null, false);
     state.billsTab = "history";
     render("bills", null, false);
+    return;
+  }
+  if (e.target.closest("[data-clear-bills]")) {
+    state.historyFilter = "All";
+    state.historyQuery = "";
+    render("bills", null, false);
+    return;
+  }
+  if (e.target.closest("[data-readall]")) {
+    state.unread = 0;
+    render("notifications", null, false);
+    showToast("All notifications marked as read.");
+    return;
+  }
+  if (e.target.closest("[data-dialog-close]")) {
+    closeSignOutDialog();
+    return;
+  }
+  if (e.target.closest("[data-dialog-confirm]")) {
+    closeSignOutDialog();
+    signOut();
+    return;
+  }
+  if (e.target.closest("[data-signout]")) {
+    openSignOutDialog();
     return;
   }
   const toastBtn = e.target.closest("[data-toast]");
@@ -1493,23 +1621,145 @@ document.addEventListener("click", (e) => {
 });
 
 /* Link accounts sheet */
+let sheetTrigger = null;
 function openAccountSheet() {
   const sheet = document.querySelector(".acct-sheet");
   if (!sheet) return;
+  sheetTrigger = document.activeElement;
   sheet.hidden = false;
-  requestAnimationFrame(() => sheet.classList.add("open"));
+  sheet.inert = false;
+  requestAnimationFrame(() => {
+    sheet.classList.add("open");
+    const close = sheet.querySelector("[data-sheet-close].icon-btn") || sheet.querySelector("[data-sheet-close]");
+    if (close) close.focus({ preventScroll: true });
+  });
 }
 
-function closeAccountSheet() {
+function closeAccountSheet(restoreFocus = true) {
   const sheet = document.querySelector(".acct-sheet.open");
   if (!sheet) return;
   sheet.classList.remove("open");
+  sheet.inert = true;
   setTimeout(() => { if (!sheet.classList.contains("open")) sheet.hidden = true; }, 280);
+  if (restoreFocus && sheetTrigger && sheetTrigger.isConnected) {
+    sheetTrigger.focus({ preventScroll: true });
+  }
+  sheetTrigger = null;
+}
+
+/* Sign-out confirmation — a real guard for a destructive action */
+let dialogTrigger = null;
+function openSignOutDialog() {
+  const phone = document.getElementById("phone-screen");
+  if (!phone || phone.querySelector(".dialog-sheet")) return;
+  dialogTrigger = document.activeElement;
+  const wrap = document.createElement("div");
+  wrap.className = "dialog-sheet";
+  wrap.innerHTML = `
+    <button class="dialog-scrim" type="button" data-dialog-close aria-label="Cancel and close" tabindex="-1"></button>
+    <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="signout-title" aria-describedby="signout-desc">
+      <span class="dialog-icon" aria-hidden="true">${ICONS.logout}</span>
+      <h3 id="signout-title">Sign out of PPCWD?</h3>
+      <p id="signout-desc">You'll need your account and meter numbers to sign back in.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-soft" type="button" data-dialog-close>Cancel</button>
+        <button class="btn btn-danger" type="button" data-dialog-confirm>Sign out</button>
+      </div>
+    </div>`;
+  phone.appendChild(wrap);
+  requestAnimationFrame(() => {
+    wrap.classList.add("open");
+    const cancel = wrap.querySelector(".dialog-actions .btn-soft");
+    if (cancel) cancel.focus({ preventScroll: true });
+  });
+}
+
+function closeSignOutDialog() {
+  const d = document.querySelector(".dialog-sheet");
+  if (!d) return;
+  d.classList.remove("open");
+  d.inert = true;
+  setTimeout(() => d.remove(), 200);
+  if (dialogTrigger && dialogTrigger.isConnected) dialogTrigger.focus({ preventScroll: true });
+  dialogTrigger = null;
+}
+
+function signOut() {
+  state.linked = false;
+  state.accounts = [{
+    acct: DATA.customer.acct,
+    label: "Home",
+    address: DATA.customer.address,
+    type: DATA.customer.type,
+    primary: true,
+  }];
+  state.activeAcct = DATA.customer.acct;
+  state.stack = [];
+  state.setupContext = "onboarding";
+  state.onbStep = "form";
+  state.onbError = "";
+  state.onbErrField = "";
+  state.onbValues = {};
+  state.onbToken++;
+  state.unread = 2;
+  state.billsTab = "current";
+  state.historyFilter = "All";
+  state.historyQuery = "";
+  state.advFilter = "All";
+  state.advQuery = "";
+  render("welcome", null, false);
+  showToast("You've been signed out.");
 }
 
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
+  closeSignOutDialog();
   closeAccountSheet();
+});
+
+/* Keep Tab inside an open modal layer (the account sheet or the sign-out
+   dialog) so keyboard users cannot reach the screen behind it. */
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Tab") return;
+  const layer = document.querySelector(".dialog-sheet.open") || document.querySelector(".acct-sheet.open");
+  if (!layer) return;
+  const items = [...layer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter((el) => !el.disabled && el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && (document.activeElement === first || !layer.contains(document.activeElement))) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && (document.activeElement === last || !layer.contains(document.activeElement))) {
+    e.preventDefault();
+    first.focus();
+  }
+});
+
+/* Submitting the onboarding form with Enter must run the same validation
+   as the button instead of reloading the page. */
+document.addEventListener("submit", (e) => {
+  if (!e.target.closest("#onb-form")) return;
+  e.preventDefault();
+  onbSubmit();
+});
+
+/* Live search on the Bills history and Advisory archive screens.
+   Re-rendering keeps the state in one place, then focus and caret are
+   restored so typing is not interrupted. */
+document.addEventListener("input", (e) => {
+  const field = e.target.closest("[data-search]");
+  if (!field) return;
+  const key = field.dataset.search;
+  state[key] = field.value;
+  render(state.screen, null, false);
+  const next = document.querySelector(`[data-search="${key}"]`);
+  if (next) {
+    next.focus({ preventScroll: true });
+    const end = next.value.length;
+    if (next.setSelectionRange) next.setSelectionRange(end, end);
+  }
 });
 
 /* Onboarding helpers */
@@ -1528,14 +1778,33 @@ function setupFields(m) {
 function onbValidate(values, mode) {
   const digits = (s) => (s || "").replace(/\D/g, "");
   if (mode === "open") {
-    if ((values.name || "").trim().length < 3) return "Enter the applicant's full name.";
-    if (!/^09\d{9}$/.test(digits(values.mobile))) return "Enter a valid mobile number (11 digits, starting with 09).";
-    if ((values.addr || "").trim().length < 6) return "Enter your complete service address.";
-    return "";
+    if ((values.name || "").trim().length < 3) {
+      return { k: "name", msg: "Enter the applicant's full name (at least 3 letters)." };
+    }
+    const mobile = digits(values.mobile);
+    if (!mobile) return { k: "mobile", msg: "Enter your mobile number, e.g. 0917 123 4567." };
+    if (!/^09\d{9}$/.test(mobile)) {
+      return { k: "mobile", msg: `A mobile number has 11 digits and starts with 09 — you entered ${mobile.length}.` };
+    }
+    if ((values.addr || "").trim().length < 6) {
+      return { k: "addr", msg: "Add the barangay and street so our crew can find the service address." };
+    }
+    return null;
   }
-  if (digits(values.acct).length < 6) return "Enter a valid account number from your water bill.";
-  if ((values.meter || "").trim().length < 3) return "Enter the meter number printed on your bill.";
-  return "";
+  const acct = digits(values.acct);
+  if (!acct) return { k: "acct", msg: "Enter the account number printed on your bill." };
+  if (acct.length < 6) {
+    return { k: "acct", msg: `Account numbers have at least 6 digits — you entered ${acct.length}.` };
+  }
+  if ((values.meter || "").trim().length < 3) {
+    return { k: "meter", msg: "Enter the meter number printed on your bill, e.g. MTR-0098213." };
+  }
+  return null;
+}
+
+function focusField(k) {
+  const el = document.querySelector(`#onb-form [name="${k}"]`);
+  if (el) el.focus();
 }
 
 function onbSubmit() {
@@ -1550,19 +1819,24 @@ function onbSubmit() {
   state.onbValues = values;
   const err = onbValidate(values, state.onbMode);
   if (err) {
-    state.onbError = err;
+    state.onbError = err.msg;
+    state.onbErrField = err.k;
     render("setup", null, false);
+    focusField(err.k);
     return;
   }
   if (state.setupContext === "manage") {
     const key = (s) => String(s || "").replace(/\D/g, "");
     if (state.accounts.some((a) => key(a.acct) === key(values.acct))) {
       state.onbError = "This account is already linked to your profile.";
+      state.onbErrField = "acct";
       render("setup", null, false);
+      focusField("acct");
       return;
     }
   }
   state.onbError = "";
+  state.onbErrField = "";
   state.onbStep = "verify";
   render("setup", null, false);
 
@@ -1584,6 +1858,7 @@ function startLinkAccount() {
   state.onbMode = "link";
   state.onbStep = "form";
   state.onbError = "";
+  state.onbErrField = "";
   state.onbValues = {};
   render("setup");
 }
@@ -1592,6 +1867,7 @@ function onbFinish() {
   state.onbToken++;
   state.onbStep = "form";
   state.onbError = "";
+  state.onbErrField = "";
   if (state.setupContext === "manage") {
     const v = state.onbValues || {};
     const acct = (v.acct || "").trim();
@@ -1621,13 +1897,20 @@ function onbFinish() {
   showToast(state.onbMode === "open" ? "Application received. We'll contact you soon." : "Welcome to PPCWD, Maria!");
 }
 
-function showToast(msg) {  const phone = document.getElementById("phone-screen");
+function showToast(msg) {
+  const phone = document.getElementById("phone-screen");
+  if (!phone) return;
   const old = phone.querySelector(".toast");
   if (old) old.remove();
   const t = document.createElement("div");
   t.className = "toast";
+  t.setAttribute("aria-hidden", "true");
   t.innerHTML = `${ICONS.checkC}<span>${msg}</span>`;
   phone.appendChild(t);
+  /* Announce through the persistent live region; the visual toast is
+     hidden from assistive tech so the message is not read twice. */
+  const live = document.getElementById("app-live");
+  if (live) live.textContent = msg;
   requestAnimationFrame(() => t.classList.add("show"));
   setTimeout(() => {
     t.classList.remove("show");
@@ -1667,15 +1950,17 @@ function buildGallery() {
       out = SCREENS.bills();
       state.billsTab = "current";
     } else if (key === "setup") {
-      const saved = { mode: state.onbMode, step: state.onbStep, err: state.onbError, vals: state.onbValues };
+      const saved = { mode: state.onbMode, step: state.onbStep, err: state.onbError, errField: state.onbErrField, vals: state.onbValues };
       state.onbMode = "link";
       state.onbStep = "form";
       state.onbError = "";
+      state.onbErrField = "";
       state.onbValues = {};
       out = SCREENS.setup();
       state.onbMode = saved.mode;
       state.onbStep = saved.step;
       state.onbError = saved.err;
+      state.onbErrField = saved.errField;
       state.onbValues = saved.vals;
     } else {
       out = SCREENS[key]();
@@ -1703,11 +1988,20 @@ function buildGallery() {
 document.addEventListener("click", (e) => {
   const vt = e.target.closest("[data-view]");
   if (!vt) return;
-  document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("active", b === vt));
+  document.querySelectorAll("[data-view]").forEach((b) => {
+    const on = b === vt;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", String(on));
+  });
   const isProto = vt.dataset.view === "proto";
   document.getElementById("proto-view").hidden = !isProto;
   document.getElementById("gallery-view").hidden = isProto;
 });
+
+/* Keep the screen counts in the page chrome truthful. */
+document.querySelector('[data-view="gallery"]').textContent = `All ${GALLERY.length} screens`;
+document.querySelector("#gallery-view .stage-note").innerHTML =
+  `Complete screen inventory &mdash; <b>${GALLERY.length} high-fidelity screens</b> covering onboarding and all core features.`;
 
 document.getElementById("phone-shell").innerHTML = `<div class="phone"><div class="notch"></div><div class="phone-screen" id="phone-screen"></div></div>`;
 render("welcome", null, false);

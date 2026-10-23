@@ -20,9 +20,9 @@
         <p>Puerto Princesa City Water District &middot; White &middot; Blue &middot; Yellow</p>
       </div>
     </div>
-    <div class="view-toggle">
-      <button data-view="proto" class="active">Interactive prototype</button>
-      <button data-view="gallery">All 17 screens</button>
+    <div class="view-toggle" role="group" aria-label="Prototype view">
+      <button data-view="proto" class="active" aria-pressed="true">Interactive prototype</button>
+      <button data-view="gallery" aria-pressed="false">All 17 screens</button>
     </div>
   </header>
 
@@ -35,6 +35,7 @@
         Tap the <b>linked accounts</b> pill on the balance card to switch or add an account.
       </p>
       <div id="phone-shell"></div>
+      <div id="app-live" class="sr-only" role="status" aria-live="polite"></div>
       <p class="footer-note">Prototype data is illustrative &middot; Customer: Maria Santos &middot; Account 0012-3456-7890</p>
     </section>
 
