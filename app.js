@@ -723,7 +723,7 @@ function billsHistory() {
     ${ICONS.search}
     <input id="bill-search" type="search" data-search="historyQuery" aria-label="Search bills by month or reference number" placeholder="Search by month or reference no." value="${esc(state.historyQuery)}" />
   </div>
-  <div class="filter-row mt-12">
+  <div class="filter-row cols-3 mt-12" role="group" aria-label="Filter bills">
     ${filters.map((f) => `<button class="fchip ${state.historyFilter === f ? "active" : ""}" data-hfilter="${f}" aria-pressed="${state.historyFilter === f}">${f === "All" ? "All months" : f}</button>`).join("")}
   </div>
   ${rows.length ? `
@@ -1004,7 +1004,7 @@ SCREENS.advisories = () => {
         <h2>Advisories</h2>
       </div>
       <div class="pad">
-        <div class="filter-row">
+        <div class="filter-row" role="group" aria-label="Filter advisories">
           ${cats.map((c) => `<button class="fchip ${state.advFilter === c ? "active" : ""}" data-advc="${c}" aria-pressed="${state.advFilter === c}">${c === "All" ? "All advisories" : c}</button>`).join("")}
         </div>
 
