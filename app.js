@@ -580,9 +580,6 @@ SCREENS.home = () => ({
             <div class="lbl">Current balance</div>
             <div class="balance-amount">&#8369;${DATA.bill.amount}</div>
           </div>
-          <button class="acct-pill" type="button" data-open-sheet aria-label="Switch or link accounts">
-            ${ICONS.drop}<span><b>${state.accounts.length}</b> account${state.accounts.length === 1 ? "" : "s"}</span>${ICONS.chevR}
-          </button>
         </div>
         <div class="balance-meta">
           <span class="pill pill-countdown">${ICONS.clock.replace("<svg", '<svg style="width:13px;height:13px"')} ${dueLabel()}</span>

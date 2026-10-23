@@ -46,7 +46,7 @@ Commit `f317b1f` addressed the step-list layout, the mobile frame fit, input pla
 
 | | High (3) | Medium (2) | Low (1) | Total |
 | --- | --- | --- | --- | --- |
-| Fixed in this pass | 11 | 19 | 5 | **35** |
+| Fixed in this pass | 11 | 19 | 6 | **36** |
 | Open | 0 | 4 | 2 | **6** |
 
 The fixed set is concentrated in four areas:
@@ -101,6 +101,7 @@ The open findings are structural: design-token drift, missing persistence, small
 | F32 | The current statement was labelled "Unpaid" while history called the same state "Due". | Chip copy differed for the same condition. | 1 | **Fixed** — both use **Due**. |
 | F33 | The page chrome hardcoded "All 17 screens" and "17 high-fidelity screens". | Counts in `index.html` and gallery copy. | 1 | **Fixed** — the counts are derived from the screen list at runtime, so the chrome cannot drift from the inventory. |
 | F35 | The Statement of Account offered **two download controls** for the same document — an unlabelled icon in the title bar and a labelled button beside Share — leaving the user to guess whether they differ. | `bill-detail` rendered a title-bar download icon and a second *Download* button in the action row, both firing the same toast. | 2 | **Fixed** — the title-bar icon is gone; one labelled **Download PDF** action remains beside Share, matching the wording on the Current Bill screen. |
+| F36 | The balance card carried a **"1 account" pill** — a count that reads as status but acts as a link, competing with the balance and duplicating account access that already exists. | The pill sat in the balance hero while the dashboard also had an *Accounts* tile and the Account tab a full accounts section. | 1 | **Fixed** — the pill and its styles were removed. The account number stays on the card to identify whose balance it is; switching and linking live in *Accounts* (dashboard tile) and the Account tab. |
 
 ### 3.5 Error prevention (H5)
 
@@ -141,7 +142,7 @@ F12 also serves recognition: one payment summary replaces two copies of the same
 | F24 | Screen changes in the single-page prototype were silent to screen readers. | No live region; focus stayed on the clicked tab. | 3 | **Fixed** — a persistent `role="status"` live region announces the new screen and focus moves to its heading. |
 | F25 | Toast confirmations were visual only. | `showToast` inserted no live region. | 2 | **Fixed** — messages go through the persistent live region; the visual toast is `aria-hidden` so it is not announced twice. |
 | F26 | The featured advisory and archive rows were clickable `div`s — mouse-only. | No role, no tabindex, no key handling on the featured card. | 3 | **Fixed** — converted to real `<button>` elements with the title/excerpt as spans; Enter/Space work and the focus ring is visible. |
-| F27 | Several targets were below 44 × 44 px: "View all" 70 × 17, "Details" 65 × 17, account pill 120 × 28, switch 52 × 32. | Measured in the browser. | 2 | **Fixed** — invisible hit areas extend the *View all / Details / Archive* links and the account pill; the switch gains 8 px of padded hit area; filter chips are at least 34 px tall. |
+| F27 | Several targets were below 44 × 44 px: "View all" 70 × 17, "Details" 65 × 17, switch 52 × 32. | Measured in the browser. | 2 | **Fixed** — invisible hit areas extend the *View all / Details / Archive* links; the switch gains 8 px of padded hit area; filter chips are at least 34 px tall. |
 | F28 | Onboarding inputs were not programmatically associated with their labels. | Implicit wrapping only; the browser reported unnamed fields. | 2 | **Fixed** — `for`/`id` plus `aria-labelledby`, and hints/errors joined with `aria-describedby`. |
 | F29 | Motion ignored the user's reduced-motion preference. | Sheet, dialog, toast and spinner animate unconditionally. | 2 | **Fixed** — `prefers-reduced-motion` removes the transitions and the spinner animation. |
 | F30 | The Tagalog greeting was not marked as such while the page is `lang="en"`. | "Magandang araw," unstyled for language. | 1 | **Fixed** — `lang="tl"` on the greeting. |
